@@ -1,0 +1,18 @@
+%% Diagram: Sơ đồ ngữ cảnh hệ thống HRM
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#0e5b62', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#0b454b', 'lineColor': '#94a3b8', 'secondaryColor': '#10b981', 'tertiaryColor': '#f59e0b', 'background': '#ffffff', 'mainBkg': '#f8fafc', 'nodeBorder': '#cbd5e1', 'clusterBkg': '#f1f5f9', 'clusterBorder': '#e2e8f0', 'titleColor': '#18343b', 'edgeLabelBackground': '#ffffff', 'textColor': '#334155'}}}%%
+flowchart LR
+    admin[Admin] -->|Tài khoản, vai trò, nhật ký| hrm((HRM Bình An))
+    hr[Quản lý nhân sự] -->|Nhân sự, đơn từ, chấm công, lương| hrm
+    leader[Trưởng nhóm] -->|Lịch làm và xác nhận nhóm| hrm
+    employee[Nhân viên] -->|Hồ sơ, đơn nghỉ, bảng lương| hrm
+    hrm -->|Thông báo và báo cáo| admin
+    hrm -->|Kết quả phê duyệt và báo cáo| hr
+    hrm -->|Lịch và tình hình nhóm| leader
+    hrm -->|Trạng thái đơn và payslip cá nhân| employee
+    mysql[(MySQL 8)] <-->|Đọc / ghi dữ liệu| hrm
+    classDef actorNode fill:#fff,stroke:#cbd5e1,color:#334155
+    classDef systemNode fill:#0e5b62,stroke:#0b454b,color:#fff
+    classDef storeNode fill:#d9f1e8,stroke:#79b8a7,color:#18343b
+    class admin,hr,leader,employee actorNode
+    class hrm systemNode
+    class mysql storeNode

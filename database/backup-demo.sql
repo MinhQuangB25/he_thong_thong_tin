@@ -1,0 +1,6 @@
+-- File mô tả bản backup demo của HRM Trung tâm Ngoại ngữ Bình An.
+-- Tạo backup đầy đủ bằng:
+-- docker compose exec db mysqldump -u root -p binhan_hrm > database/backup-YYYYMMDD.sql
+-- Phục hồi bằng:
+-- Get-Content database/backup-YYYYMMDD.sql | docker compose exec -T db mysql -u root -p binhan_hrm
+-- Dữ liệu khởi tạo có thể phục hồi lại từ schema.sql và seed.sql.

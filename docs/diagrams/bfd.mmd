@@ -1,0 +1,28 @@
+%% Diagram: BFD - Phân rã chức năng HRM Bình An
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#0e5b62', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#0b454b', 'lineColor': '#94a3b8', 'secondaryColor': '#d9f1e8', 'tertiaryColor': '#f4a261', 'background': '#ffffff', 'mainBkg': '#f8fafc', 'nodeBorder': '#cbd5e1', 'clusterBkg': '#f1f5f9', 'clusterBorder': '#e2e8f0', 'titleColor': '#18343b', 'edgeLabelBackground': '#ffffff', 'textColor': '#334155'}}}%%
+flowchart TD
+    hrm[HỆ THỐNG HRM BÌNH AN]
+    hrm --> identity[1. Quản lý tài khoản và phân quyền]
+    hrm --> people[2. Quản lý tổ chức và nhân sự]
+    hrm --> leave[3. Quản lý đơn từ]
+    hrm --> attendance[4. Chấm công và lịch làm]
+    hrm --> payroll[5. Tính lương và báo cáo]
+    hrm --> delivery[6. Quản trị dữ liệu]
+    identity --> identityA[Đăng nhập JWT]
+    identity --> identityB[Vai trò và quyền]
+    people --> peopleA[Nhân viên / phòng ban / chức vụ]
+    people --> peopleB[Hợp đồng / đội nhóm]
+    leave --> leaveA[Gửi đơn]
+    leave --> leaveB[Phê duyệt / từ chối]
+    attendance --> attendanceA[Ca và lịch làm]
+    attendance --> attendanceB[Giờ công / tăng ca]
+    payroll --> payrollA[Kỳ lương / bảng lương]
+    payroll --> payrollB[Báo cáo tháng / năm]
+    delivery --> deliveryA[Seed / backup / restore]
+    delivery --> deliveryB[Audit log]
+    classDef rootNode fill:#0e5b62,stroke:#0b454b,color:#fff
+    classDef groupNode fill:#d9f1e8,stroke:#79b8a7,color:#18343b
+    classDef leafNode fill:#fff,stroke:#cbd5e1,color:#334155
+    class hrm rootNode
+    class identity,people,leave,attendance,payroll,delivery groupNode
+    class identityA,identityB,peopleA,peopleB,leaveA,leaveB,attendanceA,attendanceB,payrollA,payrollB,deliveryA,deliveryB leafNode

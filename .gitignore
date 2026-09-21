@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+backend/target/
+frontend/node_modules/
+frontend/dist/
+uploads/
+*.log
+.idea/
+.vscode/
+*.iml
+

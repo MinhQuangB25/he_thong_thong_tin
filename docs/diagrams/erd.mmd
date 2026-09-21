@@ -1,0 +1,129 @@
+%% Diagram: ERD - CSDL HRM Bình An
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#0e5b62', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#0b454b', 'lineColor': '#94a3b8', 'secondaryColor': '#d9f1e8', 'tertiaryColor': '#f4a261', 'background': '#ffffff', 'mainBkg': '#f8fafc', 'nodeBorder': '#cbd5e1', 'clusterBkg': '#f1f5f9', 'clusterBorder': '#e2e8f0', 'titleColor': '#18343b', 'edgeLabelBackground': '#ffffff', 'textColor': '#334155'}}}%%
+erDiagram
+    roles ||--o{ user_roles : grants
+    users ||--o{ user_roles : has
+    users o|--o| employees : links
+    departments ||--o{ employees : contains
+    positions ||--o{ employees : assigns
+    employees ||--o{ employment_contracts : signs
+    employees ||--o{ work_schedules : receives
+    work_shifts ||--o{ work_schedules : defines
+    employees ||--o{ attendance_records : has
+    work_schedules o|--o{ attendance_records : supports
+    employees ||--o{ leave_requests : submits
+    leave_types ||--o{ leave_requests : classifies
+    payroll_periods ||--o{ payrolls : contains
+    employees ||--o{ payrolls : receives
+    payrolls ||--o{ payroll_items : details
+    teams ||--o{ team_members : includes
+    employees ||--o{ team_members : joins
+    roles {
+        bigint id PK
+        string code UK
+        string name
+    }
+    users {
+        bigint id PK
+        string username UK
+        string password_hash
+        string status
+        bigint employee_id FK
+    }
+    employees {
+        bigint id PK
+        string employee_code UK
+        string full_name
+        string email UK
+        date join_date
+        string status
+        bigint department_id FK
+        bigint position_id FK
+    }
+    departments {
+        bigint id PK
+        string name UK
+        boolean active
+    }
+    positions {
+        bigint id PK
+        string title UK
+        decimal default_allowance
+    }
+    employment_contracts {
+        bigint id PK
+        bigint employee_id FK
+        string contract_number
+        decimal base_salary
+        decimal allowance
+    }
+    teams {
+        bigint id PK
+        string name UK
+        bigint leader_id FK
+    }
+    team_members {
+        bigint id PK
+        bigint team_id FK
+        bigint employee_id FK
+        boolean active
+    }
+    work_shifts {
+        bigint id PK
+        string name
+        time start_time
+        time end_time
+        decimal overtime_rate
+    }
+    work_schedules {
+        bigint id PK
+        bigint employee_id FK
+        bigint shift_id FK
+        date work_date
+        string status
+    }
+    attendance_records {
+        bigint id PK
+        bigint employee_id FK
+        date attendance_date
+        decimal worked_hours
+        decimal overtime_hours
+        string status
+    }
+    leave_types {
+        bigint id PK
+        string code UK
+        string name
+        int annual_days
+    }
+    leave_requests {
+        bigint id PK
+        bigint employee_id FK
+        bigint leave_type_id FK
+        date from_date
+        date to_date
+        string status
+    }
+    payroll_periods {
+        bigint id PK
+        int payroll_month
+        int payroll_year
+        date from_date
+        date to_date
+        string status
+    }
+    payrolls {
+        bigint id PK
+        bigint period_id FK
+        bigint employee_id FK
+        decimal base_salary
+        decimal net_salary
+        string status
+    }
+    payroll_items {
+        bigint id PK
+        bigint payroll_id FK
+        string item_name
+        string item_type
+        decimal amount
+    }
