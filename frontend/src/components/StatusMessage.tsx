@@ -1,0 +1,1 @@
+export function StatusMessage({ type, children }: { type: 'error' | 'empty' | 'info'; children: React.ReactNode }) { return <div className={`status-message ${type}`} role={type === 'error' ? 'alert' : undefined}>{children}</div> }
