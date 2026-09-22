@@ -1,11 +1,14 @@
 %% Diagram: ERD - CSDL HRM Bình An
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#0e5b62', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#0b454b', 'lineColor': '#94a3b8', 'secondaryColor': '#d9f1e8', 'tertiaryColor': '#f4a261', 'background': '#ffffff', 'mainBkg': '#f8fafc', 'nodeBorder': '#cbd5e1', 'clusterBkg': '#f1f5f9', 'clusterBorder': '#e2e8f0', 'titleColor': '#18343b', 'edgeLabelBackground': '#ffffff', 'textColor': '#334155'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#e0f2fe', 'primaryTextColor': '#0f172a', 'primaryBorderColor': '#0f766e', 'lineColor': '#64748b', 'secondaryColor': '#dcfce7', 'tertiaryColor': '#fef3c7', 'background': '#ffffff', 'mainBkg': '#ffffff', 'nodeBorder': '#64748b', 'clusterBkg': '#f8fafc', 'clusterBorder': '#cbd5e1', 'titleColor': '#0f172a', 'edgeLabelBackground': '#ffffff', 'textColor': '#1e293b'}}}%%
 erDiagram
     roles ||--o{ user_roles : grants
+    roles ||--o{ role_permissions : grants
+    permissions ||--o{ role_permissions : defines
     users ||--o{ user_roles : has
     users o|--o| employees : links
     departments ||--o{ employees : contains
     positions ||--o{ employees : assigns
+    employees o|--o{ employees : manages
     employees ||--o{ employment_contracts : signs
     employees ||--o{ work_schedules : receives
     work_shifts ||--o{ work_schedules : defines
@@ -23,10 +26,20 @@ erDiagram
         string code UK
         string name
     }
+    permissions {
+        bigint id PK
+        string code UK
+        string name
+    }
+    role_permissions {
+        bigint role_id FK
+        bigint permission_id FK
+    }
     users {
         bigint id PK
         string username UK
         string password_hash
+        string display_name
         string status
         bigint employee_id FK
     }
@@ -34,11 +47,17 @@ erDiagram
         bigint id PK
         string employee_code UK
         string full_name
+        string gender
+        string national_id UK
+        string phone
         string email UK
+        string education_level
         date join_date
+        date end_date
         string status
         bigint department_id FK
         bigint position_id FK
+        bigint manager_id FK
     }
     departments {
         bigint id PK
@@ -85,7 +104,10 @@ erDiagram
     attendance_records {
         bigint id PK
         bigint employee_id FK
+        bigint schedule_id FK
         date attendance_date
+        time check_in
+        time check_out
         decimal worked_hours
         decimal overtime_hours
         string status
@@ -103,6 +125,7 @@ erDiagram
         date from_date
         date to_date
         string status
+        bigint reviewer_id FK
     }
     payroll_periods {
         bigint id PK
@@ -126,4 +149,18 @@ erDiagram
         string item_name
         string item_type
         decimal amount
+    }
+    salary_settings {
+        bigint id PK
+        int standard_work_days
+        decimal overtime_multiplier
+        date effective_from
+    }
+    audit_logs {
+        bigint id PK
+        string actor_username
+        string action
+        string entity_name
+        bigint entity_id
+        datetime created_at
     }

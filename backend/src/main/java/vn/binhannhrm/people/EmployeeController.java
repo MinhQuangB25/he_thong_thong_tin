@@ -20,23 +20,27 @@ import vn.binhannhrm.common.PageResponse;
 @RequestMapping("/api/v1/employees")
 public class EmployeeController {
     private final EmployeeService service;
+    private final TeamAccessService teamAccess;
 
-    public EmployeeController(EmployeeService service) {
+    public EmployeeController(EmployeeService service, TeamAccessService teamAccess) {
         this.service = service;
+        this.teamAccess = teamAccess;
     }
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'TEAM_LEADER')")
     public PageResponse<EmployeeDtos.EmployeeResponse> list(
+            @AuthenticationPrincipal AppUserPrincipal principal,
             @RequestParam(defaultValue = "") String search,
             Pageable pageable
     ) {
-        return PageResponse.from(service.list(search, pageable));
+        return PageResponse.from(service.list(search, pageable, teamAccess.scope(principal, null)));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'TEAM_LEADER')")
-    public EmployeeDtos.EmployeeResponse get(@PathVariable Long id) {
+    public EmployeeDtos.EmployeeResponse get(@AuthenticationPrincipal AppUserPrincipal principal, @PathVariable Long id) {
+        teamAccess.assertVisible(principal, id);
         return service.get(id);
     }
 

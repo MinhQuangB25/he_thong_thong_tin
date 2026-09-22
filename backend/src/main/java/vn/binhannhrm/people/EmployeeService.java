@@ -14,6 +14,8 @@ import vn.binhannhrm.domain.EmployeeStatus;
 import vn.binhannhrm.domain.Position;
 import vn.binhannhrm.domain.PositionRepository;
 
+import java.util.Collection;
+
 @Service
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
@@ -30,6 +32,16 @@ public class EmployeeService {
         var page = search == null || search.isBlank()
                 ? employeeRepository.findAll(pageable)
                 : employeeRepository.findByFullNameContainingIgnoreCaseOrEmployeeCodeContainingIgnoreCase(search, search, pageable);
+        return page.map(EmployeeDtos.EmployeeResponse::from);
+    }
+
+    @Transactional(readOnly = true)
+    public org.springframework.data.domain.Page<EmployeeDtos.EmployeeResponse> list(String search, Pageable pageable, Collection<Long> visibleEmployeeIds) {
+        if (visibleEmployeeIds == null) return list(search, pageable);
+        if (visibleEmployeeIds.isEmpty()) return org.springframework.data.domain.Page.empty(pageable);
+        var page = search == null || search.isBlank()
+                ? employeeRepository.findByIdIn(visibleEmployeeIds, pageable)
+                : employeeRepository.searchByIds(visibleEmployeeIds, search, pageable);
         return page.map(EmployeeDtos.EmployeeResponse::from);
     }
 
@@ -65,12 +77,14 @@ public class EmployeeService {
     @Transactional
     public EmployeeDtos.EmployeeResponse updateOwnProfile(Long id, EmployeeDtos.UpdateProfileRequest request) {
         Employee employee = find(id);
-        employee.setFullName(request.fullName());
+        employeeRepository.findByEmailIgnoreCase(request.email())
+                .filter(existing -> !existing.getId().equals(id))
+                .ifPresent(existing -> { throw new ConflictException("Email nhân viên đã tồn tại"); });
         employee.setPhone(request.phone());
         employee.setEmail(request.email());
-        employee.setAddress(request.address());
-        employee.setEducationLevel(request.educationLevel());
-        Employee saved = employeeRepository.save(employee); audit.record("EMPLOYEE_TERMINATED", "employees", saved.getId(), saved.getEmployeeCode()); return EmployeeDtos.EmployeeResponse.from(saved);
+        Employee saved = employeeRepository.save(employee);
+        audit.record("EMPLOYEE_PROFILE_UPDATED", "employees", saved.getId(), saved.getEmployeeCode());
+        return EmployeeDtos.EmployeeResponse.from(saved);
     }
 
     @Transactional
@@ -78,7 +92,9 @@ public class EmployeeService {
         Employee employee = find(id);
         employee.setStatus(EmployeeStatus.TERMINATED);
         employee.setEndDate(java.time.LocalDate.now());
-        return EmployeeDtos.EmployeeResponse.from(employeeRepository.save(employee));
+        Employee saved = employeeRepository.save(employee);
+        audit.record("EMPLOYEE_TERMINATED", "employees", saved.getId(), saved.getEmployeeCode());
+        return EmployeeDtos.EmployeeResponse.from(saved);
     }
 
     public Employee find(Long id) {

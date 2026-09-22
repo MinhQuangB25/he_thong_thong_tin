@@ -7,6 +7,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import vn.binhannhrm.auth.AppUserPrincipal;
 import vn.binhannhrm.common.ResourceNotFoundException;
+import vn.binhannhrm.people.TeamAccessService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,9 +16,17 @@ import java.util.List;
 @RequestMapping("/api/v1")
 public class AttendanceController {
     private final AttendanceService service;
-    public AttendanceController(AttendanceService service) { this.service = service; }
+    private final TeamAccessService teamAccess;
+    private final vn.binhannhrm.domain.WorkShiftRepository shifts;
+    public AttendanceController(AttendanceService service, TeamAccessService teamAccess, vn.binhannhrm.domain.WorkShiftRepository shifts) { this.service = service; this.teamAccess = teamAccess; this.shifts = shifts; }
+
+    @GetMapping("/work-shifts")
+    @PreAuthorize("isAuthenticated()")
+    public List<AttendanceDtos.WorkShiftResponse> shifts() {
+        return shifts.findByActiveTrueOrderByName().stream().map(AttendanceDtos.WorkShiftResponse::from).toList();
+    }
     @PostMapping("/work-schedules")
-    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'TEAM_LEADER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
     public AttendanceDtos.ScheduleResponse schedule(@Valid @RequestBody AttendanceDtos.ScheduleRequest request) { return service.createSchedule(request); }
     @GetMapping("/work-schedules")
     @PreAuthorize("isAuthenticated()")
@@ -25,10 +34,10 @@ public class AttendanceController {
             @RequestParam(required = false) Long employeeId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
-        return service.schedules(targetEmployee(principal, employeeId), from, to);
+        return service.schedules(teamAccess.scope(principal, employeeId), from, to);
     }
     @PostMapping("/attendance")
-    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER', 'TEAM_LEADER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
     public AttendanceDtos.AttendanceResponse record(@Valid @RequestBody AttendanceDtos.AttendanceRequest request) { return service.record(request); }
     @GetMapping("/attendance")
     @PreAuthorize("isAuthenticated()")
@@ -36,12 +45,6 @@ public class AttendanceController {
             @RequestParam(required = false) Long employeeId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
-        return service.records(targetEmployee(principal, employeeId), from, to);
-    }
-    private Long targetEmployee(AppUserPrincipal principal, Long requested) {
-        boolean manager = principal.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_HR_MANAGER") || a.getAuthority().equals("ROLE_TEAM_LEADER"));
-        if (manager && requested != null) return requested;
-        if (principal.getUser().getEmployee() == null) throw new ResourceNotFoundException("Tài khoản chưa liên kết hồ sơ nhân viên");
-        return principal.getUser().getEmployee().getId();
+        return service.records(teamAccess.scope(principal, employeeId), from, to);
     }
 }

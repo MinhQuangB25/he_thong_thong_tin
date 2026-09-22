@@ -30,11 +30,8 @@ public final class EmployeeDtos {
     }
 
     public record UpdateProfileRequest(
-            @NotBlank(message = "Họ tên là bắt buộc") String fullName,
             @NotBlank(message = "Số điện thoại là bắt buộc") String phone,
-            @Email(message = "Email không hợp lệ") @NotBlank(message = "Email là bắt buộc") String email,
-            String address,
-            String educationLevel
+            @Email(message = "Email không hợp lệ") @NotBlank(message = "Email là bắt buộc") String email
     ) {
     }
 
@@ -69,4 +66,3 @@ public final class EmployeeDtos {
         }
     }
 }
-

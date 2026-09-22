@@ -55,16 +55,41 @@ class AuthControllerTest {
 
     @Test
     void employeeCannotAccessAdminUserManagement() throws Exception {
-        String body = objectMapper.writeValueAsString(new AuthDtos.LoginRequest("employee01", "password"));
-        String token = mockMvc.perform(post("/api/v1/auth/login")
+        String accessToken = loginToken("employee01");
+        mockMvc.perform(get("/api/v1/users").header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.code").value("FORBIDDEN"));
+    }
+
+    @Test
+    void employeeCannotAccessHrReports() throws Exception {
+        String accessToken = loginToken("employee01");
+
+        mockMvc.perform(get("/api/v1/reports/employees?month=9&year=2026")
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.code").value("FORBIDDEN"));
+    }
+
+    @Test
+    void teamLeaderCannotWriteAttendance() throws Exception {
+        String accessToken = loginToken("leader01");
+
+        mockMvc.perform(post("/api/v1/attendance")
+                        .header("Authorization", "Bearer " + accessToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"employeeId\":1,\"attendanceDate\":\"2026-09-01\",\"status\":\"PRESENT\"}"))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.code").value("FORBIDDEN"));
+    }
+
+    private String loginToken(String username) throws Exception {
+        String body = objectMapper.writeValueAsString(new AuthDtos.LoginRequest(username, "password"));
+        String response = mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-
-        String accessToken = objectMapper.readTree(token).get("accessToken").asText();
-        mockMvc.perform(get("/api/v1/users").header("Authorization", "Bearer " + accessToken))
-                .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.code").value("FORBIDDEN"));
+        return objectMapper.readTree(response).get("accessToken").asText();
     }
 }

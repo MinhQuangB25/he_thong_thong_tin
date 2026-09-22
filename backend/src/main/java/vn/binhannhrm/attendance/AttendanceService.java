@@ -11,6 +11,7 @@ import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -34,6 +35,15 @@ public class AttendanceService {
     public List<AttendanceDtos.ScheduleResponse> schedules(Long employeeId, LocalDate from, LocalDate to) {
         return schedules.findByEmployeeIdAndWorkDateBetweenOrderByWorkDate(employeeId, from, to).stream().map(AttendanceDtos.ScheduleResponse::from).toList();
     }
+
+    @Transactional(readOnly = true)
+    public List<AttendanceDtos.ScheduleResponse> schedules(Collection<Long> employeeIds, LocalDate from, LocalDate to) {
+        if (employeeIds == null) return schedules.findAll().stream()
+                .filter(item -> !item.getWorkDate().isBefore(from) && !item.getWorkDate().isAfter(to))
+                .map(AttendanceDtos.ScheduleResponse::from).toList();
+        if (employeeIds.isEmpty()) return List.of();
+        return schedules.findByEmployeeIdInAndWorkDateBetweenOrderByWorkDate(employeeIds, from, to).stream().map(AttendanceDtos.ScheduleResponse::from).toList();
+    }
     @Transactional
     public AttendanceDtos.AttendanceResponse record(AttendanceDtos.AttendanceRequest input) {
         if (records.existsByEmployeeIdAndAttendanceDate(input.employeeId(), input.attendanceDate())) throw new ConflictException("Nhân viên đã có chấm công trong ngày này");
@@ -50,6 +60,14 @@ public class AttendanceService {
     @Transactional(readOnly = true)
     public List<AttendanceDtos.AttendanceResponse> records(Long employeeId, LocalDate from, LocalDate to) {
         var result = employeeId == null ? records.findByAttendanceDateBetweenOrderByAttendanceDate(from, to) : records.findByEmployeeIdAndAttendanceDateBetweenOrderByAttendanceDate(employeeId, from, to);
+        return result.stream().map(AttendanceDtos.AttendanceResponse::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<AttendanceDtos.AttendanceResponse> records(Collection<Long> employeeIds, LocalDate from, LocalDate to) {
+        var result = employeeIds == null ? records.findByAttendanceDateBetweenOrderByAttendanceDate(from, to)
+                : employeeIds.isEmpty() ? List.<AttendanceRecord>of()
+                : records.findByEmployeeIdInAndAttendanceDateBetweenOrderByAttendanceDate(employeeIds, from, to);
         return result.stream().map(AttendanceDtos.AttendanceResponse::from).toList();
     }
     private void calculateHours(AttendanceRecord record, WorkSchedule schedule) {

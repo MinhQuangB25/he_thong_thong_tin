@@ -9,6 +9,7 @@ import vn.binhannhrm.domain.*;
 
 import java.math.BigDecimal;
 import java.time.YearMonth;
+import java.time.Year;
 import java.util.List;
 
 @Service
@@ -61,9 +62,57 @@ public class PayrollService {
         period.setStatus(PayrollStatus.LOCKED); payrolls.findByPeriodId(periodId).forEach(p -> p.setStatus(PayrollStatus.LOCKED)); audit.record("PAYROLL_LOCKED", "payroll_periods", periodId, period.getMonth() + "/" + period.getYear());
         return PayrollDtos.PeriodResponse.from(period);
     }
+
+    @Transactional(readOnly = true)
+    public List<PayrollDtos.PeriodResponse> periods(Integer month, Integer year) {
+        return periods.findAll().stream()
+                .filter(period -> month == null || period.getMonth() == month)
+                .filter(period -> year == null || period.getYear() == year)
+                .sorted(java.util.Comparator.comparing(PayrollPeriod::getYear).reversed().thenComparing(PayrollPeriod::getMonth).reversed())
+                .map(PayrollDtos.PeriodResponse::from)
+                .toList();
+    }
     @Transactional(readOnly = true)
     public List<PayrollDtos.PayrollResponse> list(Long employeeId, boolean all) {
         var result = all ? payrolls.findAll() : payrolls.findByEmployeeIdOrderByPeriodYearDescPeriodMonthDesc(employeeId);
         return result.stream().map(PayrollDtos.PayrollResponse::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<PayrollDtos.PayrollResponse> list(Long employeeId, boolean all, Integer month, Integer year) {
+        int selectedYear = year == null ? Year.now().getValue() : year;
+        if (month != null && (month < 1 || month > 12)) throw new ConflictException("Tháng lương không hợp lệ");
+        var result = (all ? payrolls.findAll() : payrolls.findByEmployeeIdOrderByPeriodYearDescPeriodMonthDesc(employeeId)).stream()
+                .filter(payroll -> month == null || payroll.getPeriod().getMonth() == month)
+                .filter(payroll -> year == null || payroll.getPeriod().getYear() == selectedYear)
+                .toList();
+        return result.stream().map(PayrollDtos.PayrollResponse::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public PayrollDtos.AnnualSummary annualSummary(Long employeeId, boolean all, Integer year) {
+        int selectedYear = year == null ? Year.now().getValue() : year;
+        var result = (all ? payrolls.findAll() : payrolls.findByEmployeeIdOrderByPeriodYearDescPeriodMonthDesc(employeeId)).stream()
+                .filter(payroll -> payroll.getPeriod().getYear() == selectedYear)
+                .toList();
+        return new PayrollDtos.AnnualSummary(
+                selectedYear,
+                (int) result.stream().map(payroll -> payroll.getPeriod().getId()).distinct().count(),
+                total(result, Payroll::getBaseSalary),
+                total(result, Payroll::getAllowances),
+                total(result, Payroll::getOvertimePay),
+                total(result, Payroll::getDeductions),
+                total(result, Payroll::getNetSalary)
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public PayrollDtos.CalculationRule calculationRule() {
+        var current = settings.findTopByOrderByEffectiveFromDesc().orElseThrow(() -> new ResourceNotFoundException("Chưa cấu hình công thức lương"));
+        return new PayrollDtos.CalculationRule(current.getStandardWorkDays(), current.getOvertimeMultiplier(), "Lương thực tế + phụ cấp + tiền tăng ca - khấu trừ");
+    }
+
+    private BigDecimal total(List<Payroll> result, java.util.function.Function<Payroll, BigDecimal> getter) {
+        return result.stream().map(getter).reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2, java.math.RoundingMode.HALF_UP);
     }
 }

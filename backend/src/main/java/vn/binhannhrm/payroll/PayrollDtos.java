@@ -20,4 +20,7 @@ public final class PayrollDtos {
                                   BigDecimal netSalary, String status) {
         static PayrollResponse from(Payroll p) { return new PayrollResponse(p.getId(), p.getPeriod().getId(), p.getPeriod().getMonth(), p.getPeriod().getYear(), p.getEmployee().getId(), p.getEmployee().getFullName(), p.getBaseSalary(), p.getWorkedDays(), p.getOvertimeHours(), p.getOvertimePay(), p.getAllowances(), p.getDeductions(), p.getNetSalary(), p.getStatus().name()); }
     }
+    public record AnnualSummary(int year, int periodCount, BigDecimal totalBaseSalary, BigDecimal totalAllowances,
+                                BigDecimal totalOvertimePay, BigDecimal totalDeductions, BigDecimal totalNetSalary) {}
+    public record CalculationRule(int standardWorkDays, BigDecimal overtimeMultiplier, String formula) {}
 }

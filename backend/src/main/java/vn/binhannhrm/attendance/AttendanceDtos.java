@@ -10,6 +10,9 @@ import java.math.BigDecimal;
 
 public final class AttendanceDtos {
     private AttendanceDtos() {}
+    public record WorkShiftResponse(Long id, String name, LocalTime startTime, LocalTime endTime, BigDecimal overtimeRate) {
+        static WorkShiftResponse from(vn.binhannhrm.domain.WorkShift shift) { return new WorkShiftResponse(shift.getId(), shift.getName(), shift.getStartTime(), shift.getEndTime(), shift.getOvertimeRate()); }
+    }
     public record ScheduleRequest(@NotNull Long employeeId, @NotNull Long shiftId, @NotNull LocalDate workDate, String note) {}
     public record ScheduleResponse(Long id, Long employeeId, String employeeName, Long shiftId, String shiftName, LocalDate workDate, String status, String note) {
         static ScheduleResponse from(WorkSchedule s) { return new ScheduleResponse(s.getId(), s.getEmployee().getId(), s.getEmployee().getFullName(), s.getShift().getId(), s.getShift().getName(), s.getWorkDate(), s.getStatus().name(), s.getNote()); }

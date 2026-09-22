@@ -1,0 +1,313 @@
+@startchen
+
+' ERD Chen - He thong Quan ly Nhan su HRM Trung tam Ngoai ngu Binh An
+' Thuc the: hinh chu nhat | Thuoc tinh: hinh oval | Quan he: hinh thoi
+' File nay dung cu phap @startchen chinh thuc cua PlantUML.
+
+left to right direction
+
+entity "Vai trò" as ROLES {
+  "Mã vai trò" as role_id <<key>>
+  "Mã code" as role_code
+  "Tên vai trò" as role_name
+  "Mô tả" as role_description
+}
+
+entity "Quyền hạn" as PERMISSIONS {
+  "Mã quyền" as permission_id <<key>>
+  "Mã code" as permission_code
+  "Tên quyền" as permission_name
+  "Mô tả" as permission_description
+}
+
+entity "Tài khoản" as USERS {
+  "Mã tài khoản" as user_id <<key>>
+  "Tên đăng nhập" as username
+  "Mật khẩu mã hóa" as password_hash
+  "Tên hiển thị" as display_name
+  "Trạng thái" as user_status
+  "Mã nhân viên" as user_employee_id
+}
+
+entity "Nhật ký thao tác" as AUDIT_LOGS {
+  "Mã nhật ký" as audit_id <<key>>
+  "Tài khoản thao tác" as actor_username
+  "Hành động" as audit_action
+  "Tên đối tượng" as audit_entity_name
+  "Mã đối tượng" as audit_entity_id
+  "Thời gian" as audit_created_at
+  "Chi tiết" as audit_detail
+}
+
+entity "Phòng ban" as DEPARTMENTS {
+  "Mã phòng ban" as department_id <<key>>
+  "Tên phòng ban" as department_name
+  "Mô tả" as department_description
+  "Trạng thái" as department_active
+}
+
+entity "Chức vụ" as POSITIONS {
+  "Mã chức vụ" as position_id <<key>>
+  "Tên chức vụ" as position_name
+  "Mô tả" as position_description
+  "Trạng thái" as position_active
+}
+
+entity "Nhân viên" as EMPLOYEES {
+  "Mã nhân viên" as employee_id <<key>>
+  "Mã hồ sơ" as employee_code
+  "Họ và tên" as employee_full_name
+  "Email" as employee_email
+  "Số điện thoại" as employee_phone
+  "Ngày sinh" as employee_birth_date
+  "Giới tính" as employee_gender
+  "Địa chỉ" as employee_address
+  "Trình độ" as employee_education
+  "Ngày vào làm" as employee_joined_date
+  "Lương cơ bản" as employee_base_salary
+  "Phụ cấp" as employee_allowance
+  "Trạng thái" as employee_status
+  "Mã phòng ban" as employee_department_id
+  "Mã chức vụ" as employee_position_id
+  "Mã quản lý" as employee_manager_id
+}
+
+entity "Hợp đồng lao động" as EMPLOYMENT_CONTRACTS {
+  "Mã hợp đồng" as contract_id <<key>>
+  "Mã nhân viên" as contract_employee_id
+  "Số hợp đồng" as contract_number
+  "Loại hợp đồng" as contract_type
+  "Ngày bắt đầu" as contract_start_date
+  "Ngày kết thúc" as contract_end_date
+  "Lương cơ bản" as contract_base_salary
+  "Phụ cấp" as contract_allowance
+  "Trạng thái" as contract_status
+}
+
+entity "Đội nhóm" as TEAMS {
+  "Mã đội nhóm" as team_id <<key>>
+  "Tên đội nhóm" as team_name
+  "Mã trưởng nhóm" as team_leader_id
+  "Trạng thái" as team_active
+}
+
+entity "Ca làm việc" as WORK_SHIFTS {
+  "Mã ca" as shift_id <<key>>
+  "Tên ca" as shift_name
+  "Giờ bắt đầu" as shift_start_time
+  "Giờ kết thúc" as shift_end_time
+  "Hệ số tăng ca" as shift_overtime_rate
+  "Trạng thái" as shift_active
+}
+
+entity "Lịch làm việc" as WORK_SCHEDULES {
+  "Mã lịch" as schedule_id <<key>>
+  "Mã nhân viên" as schedule_employee_id
+  "Mã ca" as schedule_shift_id
+  "Ngày làm việc" as schedule_work_date
+  "Trạng thái" as schedule_status
+  "Ghi chú" as schedule_note
+}
+
+entity "Bản ghi chấm công" as ATTENDANCE_RECORDS {
+  "Mã chấm công" as attendance_id <<key>>
+  "Mã nhân viên" as attendance_employee_id
+  "Mã lịch" as attendance_schedule_id
+  "Ngày chấm công" as attendance_date
+  "Giờ vào" as attendance_check_in
+  "Giờ ra" as attendance_check_out
+  "Số giờ làm" as attendance_worked_hours
+  "Số giờ tăng ca" as attendance_overtime_hours
+  "Trạng thái" as attendance_status
+}
+
+entity "Loại nghỉ phép" as LEAVE_TYPES {
+  "Mã loại nghỉ" as leave_type_id <<key>>
+  "Mã code" as leave_type_code
+  "Tên loại nghỉ" as leave_type_name
+  "Số ngày phép năm" as leave_type_annual_days
+}
+
+entity "Đơn nghỉ phép" as LEAVE_REQUESTS {
+  "Mã đơn" as leave_request_id <<key>>
+  "Mã nhân viên" as leave_request_employee_id
+  "Mã loại nghỉ" as leave_request_type_id
+  "Từ ngày" as leave_request_from_date
+  "Đến ngày" as leave_request_to_date
+  "Lý do" as leave_request_reason
+  "Thời gian gửi" as leave_request_submitted_at
+  "Trạng thái" as leave_request_status
+  "Mã người duyệt" as leave_request_reviewer_id
+  "Thời gian duyệt" as leave_request_reviewed_at
+  "Lý do từ chối" as leave_request_rejection_reason
+}
+
+entity "Thiết lập lương" as SALARY_SETTINGS {
+  "Mã thiết lập" as salary_setting_id <<key>>
+  "Ngày công chuẩn" as standard_work_days
+  "Hệ số tăng ca" as salary_overtime_multiplier
+  "Ngày hiệu lực" as salary_effective_from
+}
+
+entity "Kỳ lương" as PAYROLL_PERIODS {
+  "Mã kỳ lương" as payroll_period_id <<key>>
+  "Tháng lương" as payroll_month
+  "Năm lương" as payroll_year
+  "Từ ngày" as payroll_from_date
+  "Đến ngày" as payroll_to_date
+  "Trạng thái" as payroll_period_status
+}
+
+entity "Bảng lương" as PAYROLLS {
+  "Mã bảng lương" as payroll_id <<key>>
+  "Mã kỳ lương" as payroll_period_ref
+  "Mã nhân viên" as payroll_employee_id
+  "Lương cơ bản" as payroll_base_salary
+  "Ngày công thực tế" as payroll_worked_days
+  "Giờ tăng ca" as payroll_overtime_hours
+  "Tiền tăng ca" as payroll_overtime_pay
+  "Phụ cấp" as payroll_allowances
+  "Khấu trừ" as payroll_deductions
+  "Thực lĩnh" as payroll_net_salary
+  "Trạng thái" as payroll_status
+}
+
+entity "Chi tiết bảng lương" as PAYROLL_ITEMS {
+  "Mã chi tiết" as payroll_item_id <<key>>
+  "Mã bảng lương" as payroll_item_payroll_id
+  "Tên khoản" as payroll_item_name
+  "Loại khoản" as payroll_item_type
+  "Số tiền" as payroll_item_amount
+  "Ghi chú" as payroll_item_note
+}
+
+' Các bang trung gian cua CSDL quan he duoc mo ta thanh quan he trong ERD Chen.
+relationship "Gán vai trò" as USER_ROLES {
+}
+
+relationship "Cấp quyền" as ROLE_PERMISSIONS {
+}
+
+relationship "Tham gia đội nhóm" as TEAM_MEMBERS {
+  "Trạng thái tham gia" as team_member_active
+}
+
+relationship "Liên kết tài khoản" as USER_EMPLOYEE {
+}
+
+relationship "Ghi nhật ký" as USER_AUDITS {
+}
+
+relationship "Thuộc phòng ban" as DEPARTMENT_ASSIGNMENT {
+}
+
+relationship "Đảm nhiệm chức vụ" as POSITION_ASSIGNMENT {
+}
+
+relationship "Quản lý trực tiếp" as MANAGES {
+}
+
+relationship "Ký hợp đồng" as EMPLOYEE_CONTRACTS {
+}
+
+relationship "Làm trưởng nhóm" as TEAM_LEADERSHIP {
+}
+
+relationship "Được xếp lịch" as SCHEDULE_ASSIGNMENT {
+}
+
+relationship "Định nghĩa ca" as SHIFT_SCHEDULE {
+}
+
+relationship "Ghi nhận chấm công" as EMPLOYEE_ATTENDANCE {
+}
+
+relationship "Theo lịch" as SCHEDULE_ATTENDANCE {
+}
+
+relationship "Gửi đơn nghỉ" as EMPLOYEE_LEAVE_REQUEST {
+}
+
+relationship "Phân loại đơn nghỉ" as LEAVE_TYPE_REQUEST {
+}
+
+relationship "Duyệt đơn nghỉ" as LEAVE_REVIEW {
+}
+
+relationship "Tạo kỳ lương" as PERIOD_PAYROLL {
+}
+
+relationship "Nhận bảng lương" as EMPLOYEE_PAYROLL {
+}
+
+relationship "Áp dụng thiết lập lương" as SETTINGS_PAYROLL {
+}
+
+relationship "Có chi tiết" as PAYROLL_DETAIL {
+}
+
+' Quan he va luc luong theo mo hinh Chen.
+USER_ROLES -N- USERS
+USER_ROLES -N- ROLES
+
+ROLE_PERMISSIONS -N- ROLES
+ROLE_PERMISSIONS -N- PERMISSIONS
+
+USER_EMPLOYEE -(0,1)- USERS
+USER_EMPLOYEE -(0,1)- EMPLOYEES
+
+USER_AUDITS -1- USERS
+USER_AUDITS -N- AUDIT_LOGS
+
+DEPARTMENT_ASSIGNMENT -1- DEPARTMENTS
+DEPARTMENT_ASSIGNMENT -N- EMPLOYEES
+
+POSITION_ASSIGNMENT -1- POSITIONS
+POSITION_ASSIGNMENT -N- EMPLOYEES
+
+MANAGES -1- EMPLOYEES
+MANAGES -N- EMPLOYEES
+
+EMPLOYEE_CONTRACTS -1- EMPLOYEES
+EMPLOYEE_CONTRACTS -N- EMPLOYMENT_CONTRACTS
+
+TEAM_MEMBERS -N- TEAMS
+TEAM_MEMBERS -N- EMPLOYEES
+
+TEAM_LEADERSHIP -1- EMPLOYEES
+TEAM_LEADERSHIP -N- TEAMS
+
+SCHEDULE_ASSIGNMENT -N- EMPLOYEES
+SCHEDULE_ASSIGNMENT -N- WORK_SCHEDULES
+
+SHIFT_SCHEDULE -1- WORK_SHIFTS
+SHIFT_SCHEDULE -N- WORK_SCHEDULES
+
+EMPLOYEE_ATTENDANCE -1- EMPLOYEES
+EMPLOYEE_ATTENDANCE -N- ATTENDANCE_RECORDS
+
+SCHEDULE_ATTENDANCE -(0,1)- WORK_SCHEDULES
+SCHEDULE_ATTENDANCE -N- ATTENDANCE_RECORDS
+
+EMPLOYEE_LEAVE_REQUEST -1- EMPLOYEES
+EMPLOYEE_LEAVE_REQUEST -N- LEAVE_REQUESTS
+
+LEAVE_TYPE_REQUEST -1- LEAVE_TYPES
+LEAVE_TYPE_REQUEST -N- LEAVE_REQUESTS
+
+LEAVE_REVIEW -(0,1)- EMPLOYEES
+LEAVE_REVIEW -(0,1)- LEAVE_REQUESTS
+
+PERIOD_PAYROLL -1- PAYROLL_PERIODS
+PERIOD_PAYROLL -N- PAYROLLS
+
+EMPLOYEE_PAYROLL -1- EMPLOYEES
+EMPLOYEE_PAYROLL -N- PAYROLLS
+
+SETTINGS_PAYROLL -1- SALARY_SETTINGS
+SETTINGS_PAYROLL -N- PAYROLLS
+
+PAYROLL_DETAIL -1- PAYROLLS
+PAYROLL_DETAIL -N- PAYROLL_ITEMS
+
+@endchen

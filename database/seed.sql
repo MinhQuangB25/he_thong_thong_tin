@@ -1,3 +1,4 @@
+SET NAMES utf8mb4;
 USE binhan_hrm;
 
 INSERT IGNORE INTO roles (id, code, name) VALUES
@@ -21,10 +22,10 @@ INSERT IGNORE INTO employees (id, employee_code, full_name, gender, phone, email
  (3, 'BA-EMP-001', 'Nguyễn Minh Anh', 'FEMALE', '0901000003', 'employee01@binhan.local', 'Đại học', DATE_SUB(CURDATE(), INTERVAL 6 MONTH), 'ACTIVE', 1, 1);
 UPDATE employees SET manager_id = 2 WHERE id = 3;
 INSERT IGNORE INTO users (id, username, password_hash, display_name, status, employee_id) VALUES
- (1, 'admin', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Quản trị hệ thống', 'ACTIVE', NULL),
- (2, 'hr.manager', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Quản lý nhân sự', 'ACTIVE', 1),
- (3, 'leader01', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Trưởng nhóm Anh ngữ', 'ACTIVE', 2),
- (4, 'employee01', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Nguyễn Minh Anh', 'ACTIVE', 3);
+ (1, 'admin', '$2a$12$imBz2P6LVFfbTV2OWPXnJ.bXLL0z18/GqTX2iy9VIqUGKZOPiKJja', 'Quản trị hệ thống', 'ACTIVE', NULL),
+ (2, 'hr.manager', '$2a$12$imBz2P6LVFfbTV2OWPXnJ.bXLL0z18/GqTX2iy9VIqUGKZOPiKJja', 'Quản lý nhân sự', 'ACTIVE', 1),
+ (3, 'leader01', '$2a$12$imBz2P6LVFfbTV2OWPXnJ.bXLL0z18/GqTX2iy9VIqUGKZOPiKJja', 'Trưởng nhóm Anh ngữ', 'ACTIVE', 2),
+ (4, 'employee01', '$2a$12$imBz2P6LVFfbTV2OWPXnJ.bXLL0z18/GqTX2iy9VIqUGKZOPiKJja', 'Nguyễn Minh Anh', 'ACTIVE', 3);
 INSERT IGNORE INTO user_roles (user_id, role_id) VALUES (1, 1), (2, 2), (3, 3), (4, 4);
 INSERT IGNORE INTO role_permissions (role_id, permission_id) VALUES (1,1),(1,2),(1,3),(1,4),(2,1),(2,2),(2,3),(2,4),(3,1),(4,1);
 INSERT IGNORE INTO employment_contracts (id, employee_id, contract_number, contract_type, start_date, base_salary, allowance, status) VALUES
@@ -55,3 +56,33 @@ INSERT IGNORE INTO payroll_periods (id, payroll_month, payroll_year, from_date, 
 INSERT IGNORE INTO payrolls (period_id, employee_id, base_salary, worked_days, overtime_hours, overtime_pay, allowances, deductions, net_salary, status)
  SELECT 1, 3, 14000000, 3, 1.5, 100961.54, 500000, 0, 2212500.00, 'DRAFT'
  WHERE EXISTS (SELECT 1 FROM payroll_periods WHERE id = 1);
+
+-- Additional demo data for reports, soft termination, team scope and annual payroll.
+INSERT IGNORE INTO positions (id, title, default_allowance, active) VALUES
+ (4, 'Trợ lý vận hành', 700000, TRUE);
+INSERT IGNORE INTO employees (id, employee_code, full_name, gender, phone, email, education_level, join_date, status, end_date, department_id, position_id) VALUES
+ (4, 'BA-EMP-002', 'Phạm Ngọc Lan', 'FEMALE', '0901000004', 'lan.operations@binhan.local', 'Cao đẳng', DATE_SUB(CURDATE(), INTERVAL 50 MONTH), 'ACTIVE', NULL, 2, 4),
+ (5, 'BA-EMP-003', 'Võ Hoàng Nam', 'MALE', '0901000005', 'nam.former@binhan.local', 'Đại học', DATE_SUB(CURDATE(), INTERVAL 5 YEAR), 'TERMINATED', DATE_SUB(CURDATE(), INTERVAL 2 MONTH), 1, 1);
+INSERT IGNORE INTO employment_contracts (id, employee_id, contract_number, contract_type, start_date, base_salary, allowance, status) VALUES
+ (4, 4, 'HD-BA-004', 'Không xác định thời hạn', DATE_SUB(CURDATE(), INTERVAL 50 MONTH), 11000000, 300000, 'ACTIVE'),
+ (5, 5, 'HD-BA-005', 'Không xác định thời hạn', DATE_SUB(CURDATE(), INTERVAL 5 YEAR), 16000000, 700000, 'TERMINATED');
+INSERT IGNORE INTO leave_requests (id, employee_id, leave_type_id, from_date, to_date, reason, submitted_at, status, reviewer_id, reviewed_at)
+ VALUES (2, 3, 1, DATE_SUB(CURDATE(), INTERVAL 2 DAY), LAST_DAY(CURDATE()), 'Nghỉ phép cá nhân - dữ liệu demo', NOW(), 'APPROVED', 1, NOW());
+INSERT IGNORE INTO work_schedules (id, employee_id, shift_id, work_date, status, note) VALUES
+ (4, 1, 1, DATE_SUB(CURDATE(), INTERVAL 2 DAY), 'COMPLETED', 'Demo HR'),
+ (5, 2, 1, DATE_SUB(CURDATE(), INTERVAL 2 DAY), 'COMPLETED', 'Demo trưởng nhóm'),
+ (6, 4, 1, DATE_SUB(CURDATE(), INTERVAL 2 DAY), 'COMPLETED', 'Demo vận hành');
+INSERT IGNORE INTO attendance_records (employee_id, schedule_id, attendance_date, check_in, check_out, worked_hours, overtime_hours, status) VALUES
+ (1, 4, DATE_SUB(CURDATE(), INTERVAL 2 DAY), '08:00:00', '17:30:00', 8, .5, 'PRESENT'),
+ (2, 5, DATE_SUB(CURDATE(), INTERVAL 2 DAY), '08:00:00', '17:30:00', 8, .5, 'PRESENT'),
+ (4, 6, DATE_SUB(CURDATE(), INTERVAL 2 DAY), '08:10:00', '18:00:00', 8, 1, 'LATE');
+INSERT IGNORE INTO payroll_periods (id, payroll_month, payroll_year, from_date, to_date, status)
+ VALUES (2, MONTH(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)), YEAR(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)), DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01'), LAST_DAY(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)), 'DRAFT');
+INSERT IGNORE INTO payrolls (period_id, employee_id, base_salary, worked_days, overtime_hours, overtime_pay, allowances, deductions, net_salary, status) VALUES
+ (1, 1, 18000000, 3, 1.5, 194711.54, 1000000, 0, 3277792.31, 'DRAFT'),
+ (1, 2, 22000000, 3, 1.5, 237740.38, 1500000, 0, 4273125.00, 'DRAFT'),
+ (1, 4, 11000000, 3, 1.5, 118990.38, 300000, 0, 1681682.69, 'DRAFT'),
+ (2, 1, 18000000, 20, 0, 0, 1000000, 0, 14846153.85, 'DRAFT'),
+ (2, 2, 22000000, 20, 0, 0, 1500000, 0, 18419230.77, 'DRAFT'),
+ (2, 3, 14000000, 20, 0, 0, 500000, 0, 11230769.23, 'DRAFT'),
+ (2, 4, 11000000, 20, 0, 0, 300000, 0, 8769230.77, 'DRAFT');

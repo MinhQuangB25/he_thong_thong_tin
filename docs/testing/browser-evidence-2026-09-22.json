@@ -1,0 +1,67 @@
+{
+  "date": "2026-09-22",
+  "page": "HR employees, advanced filters open",
+  "viewports": [
+    {
+      "width": 320,
+      "observation": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Script ran on page and returned:\n```json\n{\"width\":320,\"documentWidth\":320,\"sidebarVisible\":\"none\",\"filters\":[{\"label\":\"Lọc theo trạng thái nhân sự\",\"x\":42,\"right\":278,\"panelRight\":304,\"clipped\":false},{\"label\":\"Lọc theo phòng ban\",\"x\":42,\"right\":278,\"panelRight\":304,\"clipped\":false},{\"label\":\"Lọc theo chức vụ\",\"x\":42,\"right\":278,\"panelRight\":304,\"clipped\":false},{\"label\":\"Sắp xếp nhân sự theo\",\"x\":42,\"right\":278,\"panelRight\":304,\"clipped\":false},{\"label\":\"Đổi thứ tự sắp xếp nhân sự\",\"x\":42,\"right\":278,\"panelRight\":304,\"clipped\":false},{\"label\":\"Đặt lại\",\"x\":42,\"right\":278,\"panelRight\":304,\"clipped\":false}],\"tableScrollable\":{\"width\":286,\"scroll\":919,\"overflow\":\"auto\"}}\n```"
+          }
+        ]
+      }
+    },
+    {
+      "width": 768,
+      "observation": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Script ran on page and returned:\n```json\n{\"width\":768,\"documentWidth\":753,\"sidebarVisible\":\"none\",\"filters\":[{\"label\":\"Lọc theo trạng thái nhân sự\",\"x\":49,\"right\":704,\"panelRight\":730,\"clipped\":false},{\"label\":\"Lọc theo phòng ban\",\"x\":49,\"right\":704,\"panelRight\":730,\"clipped\":false},{\"label\":\"Lọc theo chức vụ\",\"x\":49,\"right\":704,\"panelRight\":730,\"clipped\":false},{\"label\":\"Sắp xếp nhân sự theo\",\"x\":49,\"right\":704,\"panelRight\":730,\"clipped\":false},{\"label\":\"Đổi thứ tự sắp xếp nhân sự\",\"x\":49,\"right\":704,\"panelRight\":730,\"clipped\":false},{\"label\":\"Đặt lại\",\"x\":49,\"right\":704,\"panelRight\":730,\"clipped\":false}],\"tableScrollable\":{\"width\":705,\"scroll\":919,\"overflow\":\"auto\"}}\n```"
+          }
+        ]
+      }
+    },
+    {
+      "width": 1024,
+      "observation": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Script ran on page and returned:\n```json\n{\"width\":1024,\"documentWidth\":1024,\"sidebarVisible\":\"flex\",\"filters\":[{\"label\":\"Lọc theo trạng thái nhân sự\",\"x\":262,\"right\":442,\"panelRight\":993,\"clipped\":false},{\"label\":\"Lọc theo phòng ban\",\"x\":454,\"right\":634,\"panelRight\":993,\"clipped\":false},{\"label\":\"Lọc theo chức vụ\",\"x\":646,\"right\":826,\"panelRight\":993,\"clipped\":false},{\"label\":\"Sắp xếp nhân sự theo\",\"x\":838,\"right\":1018,\"panelRight\":993,\"clipped\":true},{\"label\":\"Đổi thứ tự sắp xếp nhân sự\",\"x\":1030,\"right\":1073,\"panelRight\":993,\"clipped\":true},{\"label\":\"Đặt lại\",\"x\":1085,\"right\":1116,\"panelRight\":993,\"clipped\":true}],\"tableScrollable\":{\"width\":756,\"scroll\":919,\"overflow\":\"auto\"}}\n```"
+          }
+        ]
+      }
+    },
+    {
+      "width": 1440,
+      "observation": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Script ran on page and returned:\n```json\n{\"width\":1440,\"documentWidth\":1440,\"sidebarVisible\":\"flex\",\"filters\":[{\"label\":\"Lọc theo trạng thái nhân sự\",\"x\":333,\"right\":513,\"panelRight\":1378,\"clipped\":false},{\"label\":\"Lọc theo phòng ban\",\"x\":525,\"right\":705,\"panelRight\":1378,\"clipped\":false},{\"label\":\"Lọc theo chức vụ\",\"x\":717,\"right\":897,\"panelRight\":1378,\"clipped\":false},{\"label\":\"Sắp xếp nhân sự theo\",\"x\":909,\"right\":1089,\"panelRight\":1378,\"clipped\":false},{\"label\":\"Đổi thứ tự sắp xếp nhân sự\",\"x\":1101,\"right\":1163,\"panelRight\":1378,\"clipped\":false},{\"label\":\"Đặt lại\",\"x\":1175,\"right\":1219,\"panelRight\":1378,\"clipped\":false}],\"tableScrollable\":{\"width\":1070,\"scroll\":1070,\"overflow\":\"auto\"}}\n```"
+          }
+        ]
+      }
+    }
+  ],
+  "mobileMenu": {
+    "testedWidths": [
+      320,
+      768
+    ],
+    "before": "sidebar display:none",
+    "afterClick": "sidebar display:none",
+    "result": "FAIL"
+  },
+  "network": {
+    "content": [
+      {
+        "type": "text",
+        "text": "Emulating viewport: {\"deviceScaleFactor\":1,\"isMobile\":true,\"hasTouch\":true,\"isLandscape\":false,\"width\":1440,\"height\":900}\n## Network requests\nShowing 1-68 of 68 (Page 1 of 1).\nreqid=13 POST http://localhost:8080/api/v1/auth/login [200]\nreqid=16 GET http://localhost:8080/api/v1/employees?size=5 [200]\nreqid=17 GET http://localhost:8080/api/v1/leave-requests?size=5 [200]\nreqid=18 GET http://localhost:8080/api/v1/payrolls [200]\nreqid=22 GET http://localhost:8080/api/v1/employees?search=&page=0&size=20&sort=fullName,asc [200]\nreqid=25 GET http://localhost:8080/api/v1/attendance?from=2026-08-31&to=2026-09-29 [200]\nreqid=29 GET http://localhost:8080/api/v1/leave-requests?size=30 [200]\nreqid=30 GET http://localhost:8080/api/v1/leave-types [200]\nreqid=32 POST http://localhost:8080/api/v1/auth/login [200]\nreqid=33 GET http://localhost:8080/api/v1/employees?size=5 [200]\nreqid=35 GET http://localhost:8080/api/v1/leave-requests?size=5 [200]\nreqid=36 GET http://localhost:8080/api/v1/payrolls [200]\nreqid=39 GET http://localhost:8080/api/v1/employees?search=&page=0&size=20&sort=fullName,asc [200]\nreqid=43 GET http://localhost:8080/api/v1/departments [200]\nreqid=44 GET http://localhost:8080/api/v1/positions [200]\nreqid=47 POST http://localhost:8080/api/v1/employees [200]\nreqid=48 GET http://localhost:8080/api/v1/employees?search=&page=0&size=20&sort=fullName,asc [200]\nreqid=50 GET http://localhost:8080/api/v1/employees?search=TEST-UI-0922&page=0&size=20&sort=fullName,asc [200]\nreqid=55 GET http://localhost:8080/api/v1/attendance?from=2026-08-31&to=2026-09-29 [200]\nreqid=56 GET http://localhost:8080/api/v1/employees?size=100&sort=fullName,asc [200]\nreqid=57 GET http://localhost:8080/api/v1/work-shifts [200]\nreqid=60 POST http://localhost:8080/api/v1/work-schedules [200]\nreqid=61 POST http://localhost:8080/api/v1/attendance [200]\nreqid=63 GET http://localhost:8080/api/v1/attendance?from=2026-08-31&to=2026-09-29 [200]\nreqid=66 POST http://localhost:8080/api/v1/work-schedules [200]\nreqid=67 POST http://localhost:8080/api/v1/attendance [409]\nreqid=70 POST http://localhost:8080/api/v1/work-schedules [409]\nreqid=73 GET http://localhost:8080/api/v1/leave-requests?size=30 [200]\nreqid=74 GET http://localhost:8080/api/v1/leave-types [200]\nreqid=75 PATCH http://localhost:8080/api/v1/leave-requests/8/review [200]\nreqid=77 GET http://localhost:8080/api/v1/leave-requests?size=30 [200]\nreqid=79 PATCH http://localhost:8080/api/v1/leave-requests/9/review [200]\nreqid=81 GET http://localhost:8080/api/v1/leave-requests?size=30 [200]\nreqid=86 GET http://localhost:8080/api/v1/payrolls?month=9&year=2026 [200]\nreqid=87 GET http://localhost:8080/api/v1/payrolls/annual-summary?year=2026 [200]\nreqid=88 GET http://localhost:8080/api/v1/payrolls/calculation-rule [200]\nreqid=89 GET http://localhost:8080/api/v1/payroll-periods?month=9&year=2026 [200]\nreqid=91 GET http://localhost:8080/api/v1/payrolls?month=9&year=2 [200]\nreqid=92 GET http://localhost:8080/api/v1/payrolls/annual-summary?year=2 [200]\nreqid=93 GET http://localhost:8080/api/v1/payrolls/calculation-rule [200]\nreqid=94 GET http://localhost:8080/api/v1/payroll-periods?month=9&year=2 [200]\nreqid=99 GET http://localhost:8080/api/v1/payrolls?month=9&year=20 [200]\nreqid=100 GET http://localhost:8080/api/v1/payrolls/annual-summary?year=20 [200]\nreqid=101 GET http://localhost:8080/api/v1/payrolls/calculation-rule [200]\nreqid=102 GET http://localhost:8080/api/v1/payroll-periods?month=9&year=20 [200]\nreqid=103 GET http://localhost:8080/api/v1/payrolls?month=9&year=209 [200]\nreqid=104 GET http://localhost:8080/api/v1/payrolls/annual-summary?year=209 [200]\nreqid=105 GET http://localhost:8080/api/v1/payrolls/calculation-rule [200]\nreqid=106 GET http://localhost:8080/api/v1/payroll-periods?month=9&year=209 [200]\nreqid=115 GET http://localhost:8080/api/v1/payrolls?month=9&year=2099 [200]\nreqid=116 GET http://localhost:8080/api/v1/payrolls/annual-summary?year=2099 [200]\nreqid=117 GET http://localhost:8080/api/v1/payrolls/calculation-rule [200]\nreqid=118 GET http://localhost:8080/api/v1/payroll-periods?month=9&year=2099 [200]\nreqid=121 GET http://localhost:8080/api/v1/payrolls?month=12&year=2099 [200]\nreqid=122 GET http://localhost:8080/api/v1/payrolls/annual-summary?year=2099 [200]\nreqid=123 GET http://localhost:8080/api/v1/payrolls/calculation-rule [200]\nreqid=124 GET http://localhost:8080/api/v1/payroll-periods?month=12&year=2099 [200]\nreqid=127 POST http://localhost:8080/api/v1/payroll-periods/3/generate [409]\nreqid=129 GET http://localhost:8080/api/v1/reports/employees?month=9&year=2026 [200]\nreqid=142 POST http://localhost:8080/api/v1/auth/login [200]\nreqid=146 GET http://localhost:8080/api/v1/employees?size=5 [200]\nreqid=147 GET http://localhost:8080/api/v1/leave-requests?size=5 [200]\nreqid=148 GET http://localhost:8080/api/v1/payrolls [200]\nreqid=151 GET http://localhost:8080/api/v1/employees?search=&page=0&size=20&sort=fullName,asc [200]\nreqid=153 GET http://localhost:8080/api/v1/employees?search=TEST-UI-0922&page=0&size=20&sort=fullName,asc [200]\nreqid=155 DELETE http://localhost:8080/api/v1/employees/8 [200]\nreqid=157 GET http://localhost:8080/api/v1/employees?search=TEST-UI-0922&page=0&size=20&sort=fullName,asc [200]\nreqid=160 GET http://localhost:8080/api/v1/reports/employees?month=9&year=2026 [200]"
+      }
+    ]
+  }
+}

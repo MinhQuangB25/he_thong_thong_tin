@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2300" height="1450" viewBox="0 0 2300 1450">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#172033}.caption{font-size:30px;font-weight:700}.entity{font-size:22px;font-weight:700}.relation{font-size:18px;font-weight:700}.attribute{font-size:17px}.cardinality{font-size:16px;font-weight:700}</style>
+<text x="1150.0" y="42" text-anchor="middle" class="caption">ERD Chen - Chấm công, nghỉ phép và tính lương</text>
+<rect x="120" y="570" width="260" height="92" rx="2" fill="#5b6bc1" stroke="#1f2d68" stroke-width="3"/>
+<text x="250.0" y="624.0" text-anchor="middle" class="entity">EMPLOYEES</text>
+<rect x="430" y="160" width="250" height="82" rx="2" fill="#5b6bc1" stroke="#1f2d68" stroke-width="3"/>
+<text x="555.0" y="209.0" text-anchor="middle" class="entity">WORK_SHIFTS</text>
+<rect x="820" y="280" width="300" height="82" rx="2" fill="#5b6bc1" stroke="#1f2d68" stroke-width="3"/>
+<text x="970.0" y="329.0" text-anchor="middle" class="entity">WORK_SCHEDULES</text>
+<rect x="1260" y="570" width="330" height="92" rx="2" fill="#5b6bc1" stroke="#1f2d68" stroke-width="3"/>
+<text x="1425.0" y="624.0" text-anchor="middle" class="entity">ATTENDANCE_RECORDS</text>
+<rect x="790" y="820" width="250" height="82" rx="2" fill="#5b6bc1" stroke="#1f2d68" stroke-width="3"/>
+<text x="915.0" y="869.0" text-anchor="middle" class="entity">LEAVE_TYPES</text>
+<rect x="1240" y="1000" width="300" height="82" rx="2" fill="#5b6bc1" stroke="#1f2d68" stroke-width="3"/>
+<text x="1390.0" y="1049.0" text-anchor="middle" class="entity">LEAVE_REQUESTS</text>
+<rect x="1650" y="160" width="300" height="82" rx="2" fill="#5b6bc1" stroke="#1f2d68" stroke-width="3"/>
+<text x="1800.0" y="209.0" text-anchor="middle" class="entity">PAYROLL_PERIODS</text>
+<rect x="1740" y="570" width="220" height="82" rx="2" fill="#5b6bc1" stroke="#1f2d68" stroke-width="3"/>
+<text x="1850.0" y="619.0" text-anchor="middle" class="entity">PAYROLLS</text>
+<rect x="2010" y="1000" width="260" height="82" rx="2" fill="#5b6bc1" stroke="#1f2d68" stroke-width="3"/>
+<text x="2140.0" y="1049.0" text-anchor="middle" class="entity">PAYROLL_ITEMS</text>
+<rect x="1680" y="1180" width="290" height="82" rx="2" fill="#5b6bc1" stroke="#1f2d68" stroke-width="3"/>
+<text x="1825.0" y="1229.0" text-anchor="middle" class="entity">SALARY_SETTINGS</text>
+<rect x="430" y="1160" width="220" height="82" rx="2" fill="#5b6bc1" stroke="#1f2d68" stroke-width="3"/>
+<text x="540.0" y="1209.0" text-anchor="middle" class="entity">AUDIT_LOGS</text>
+<line x1="555" y1="242" x2="760" y2="200" stroke="#273247" stroke-width="2"/>
+<line x1="760" y1="200" x2="820" y2="320" stroke="#273247" stroke-width="2"/>
+<text x="612.4" y="222.23999999999998" text-anchor="middle" class="cardinality">1</text>
+<text x="803.2" y="278.4" text-anchor="middle" class="cardinality">N</text>
+<polygon points="760,154.0 855.0,200 760,246.0 665.0,200" fill="#f4a3a3" stroke="#742f3d" stroke-width="3"/>
+<text x="760" y="205" text-anchor="middle" class="relation">ĐỊNH NGHĨA</text>
+<line x1="380" y1="580" x2="620" y2="420" stroke="#273247" stroke-width="2"/>
+<line x1="620" y1="420" x2="820" y2="320" stroke="#273247" stroke-width="2"/>
+<text x="447.2" y="527.1999999999999" text-anchor="middle" class="cardinality">1</text>
+<text x="764.0" y="340.0" text-anchor="middle" class="cardinality">N</text>
+<polygon points="620,374.0 715.0,420 620,466.0 525.0,420" fill="#f4a3a3" stroke="#742f3d" stroke-width="3"/>
+<text x="620" y="425" text-anchor="middle" class="relation">NHẬN LỊCH</text>
+<line x1="1120" y1="320" x2="1170" y2="420" stroke="#273247" stroke-width="2"/>
+<line x1="1170" y1="420" x2="1260" y2="600" stroke="#273247" stroke-width="2"/>
+<text x="1134.0" y="340.0" text-anchor="middle" class="cardinality">1</text>
+<text x="1234.8" y="541.6" text-anchor="middle" class="cardinality">N</text>
+<polygon points="1170,374.0 1265.0,420 1170,466.0 1075.0,420" fill="#f4a3a3" stroke="#742f3d" stroke-width="3"/>
+<text x="1170" y="425" text-anchor="middle" class="relation">HỖ TRỢ</text>
+<line x1="380" y1="610" x2="820" y2="610" stroke="#273247" stroke-width="2"/>
+<line x1="820" y1="610" x2="1260" y2="610" stroke="#273247" stroke-width="2"/>
+<text x="503.2" y="602.0" text-anchor="middle" class="cardinality">1</text>
+<text x="1136.8" y="602.0" text-anchor="middle" class="cardinality">N</text>
+<polygon points="820,564.0 915.0,610 820,656.0 725.0,610" fill="#f4a3a3" stroke="#742f3d" stroke-width="3"/>
+<text x="820" y="615" text-anchor="middle" class="relation">CHẤM CÔNG</text>
+<line x1="380" y1="650" x2="700" y2="850" stroke="#273247" stroke-width="2"/>
+<line x1="700" y1="850" x2="1240" y2="1040" stroke="#273247" stroke-width="2"/>
+<text x="469.6" y="698.0" text-anchor="middle" class="cardinality">1</text>
+<text x="1088.8" y="978.8" text-anchor="middle" class="cardinality">N</text>
+<polygon points="700,804.0 795.0,850 700,896.0 605.0,850" fill="#f4a3a3" stroke="#742f3d" stroke-width="3"/>
+<text x="700" y="855" text-anchor="middle" class="relation">GỬI ĐƠN</text>
+<line x1="1040" y1="860" x2="1130" y2="940" stroke="#273247" stroke-width="2"/>
+<line x1="1130" y1="940" x2="1240" y2="1040" stroke="#273247" stroke-width="2"/>
+<text x="1065.2" y="874.4" text-anchor="middle" class="cardinality">1</text>
+<text x="1209.2" y="1004.0" text-anchor="middle" class="cardinality">N</text>
+<polygon points="1130,894.0 1225.0,940 1130,986.0 1035.0,940" fill="#f4a3a3" stroke="#742f3d" stroke-width="3"/>
+<text x="1130" y="945" text-anchor="middle" class="relation">PHÂN LOẠI</text>
+<line x1="1800" y1="242" x2="1780" y2="360" stroke="#273247" stroke-width="2"/>
+<line x1="1780" y1="360" x2="1850" y2="570" stroke="#273247" stroke-width="2"/>
+<text x="1794.4" y="267.03999999999996" text-anchor="middle" class="cardinality">1</text>
+<text x="1830.4" y="503.2" text-anchor="middle" class="cardinality">N</text>
+<polygon points="1780,314.0 1875.0,360 1780,406.0 1685.0,360" fill="#f4a3a3" stroke="#742f3d" stroke-width="3"/>
+<text x="1780" y="365" text-anchor="middle" class="relation">LẬP BẢNG LƯƠNG</text>
+<line x1="1590" y1="610" x2="1660" y2="610" stroke="#273247" stroke-width="2"/>
+<line x1="1660" y1="610" x2="1740" y2="610" stroke="#273247" stroke-width="2"/>
+<text x="1609.6" y="602.0" text-anchor="middle" class="cardinality">1</text>
+<text x="1717.6" y="602.0" text-anchor="middle" class="cardinality">N</text>
+<polygon points="1660,564.0 1755.0,610 1660,656.0 1565.0,610" fill="#f4a3a3" stroke="#742f3d" stroke-width="3"/>
+<text x="1660" y="615" text-anchor="middle" class="relation">NHẬN LƯƠNG</text>
+<line x1="1960" y1="620" x2="2010" y2="900" stroke="#273247" stroke-width="2"/>
+<line x1="2010" y1="900" x2="2140" y2="1000" stroke="#273247" stroke-width="2"/>
+<text x="1974.0" y="690.4" text-anchor="middle" class="cardinality">1</text>
+<text x="2103.6" y="964.0" text-anchor="middle" class="cardinality">N</text>
+<polygon points="2010,854.0 2105.0,900 2010,946.0 1915.0,900" fill="#f4a3a3" stroke="#742f3d" stroke-width="3"/>
+<text x="2010" y="905" text-anchor="middle" class="relation">CHI TIẾT</text>
+<line x1="1825" y1="1180" x2="1880" y2="850" stroke="#273247" stroke-width="2"/>
+<line x1="1880" y1="850" x2="1850" y2="650" stroke="#273247" stroke-width="2"/>
+<text x="1840.4" y="1079.6000000000001" text-anchor="middle" class="cardinality">1</text>
+<text x="1858.4" y="698.0" text-anchor="middle" class="cardinality">N</text>
+<polygon points="1880,804.0 1975.0,850 1880,896.0 1785.0,850" fill="#f4a3a3" stroke="#742f3d" stroke-width="3"/>
+<text x="1880" y="855" text-anchor="middle" class="relation">ÁP DỤNG</text>
+<line x1="105" y1="470" x2="250.0" y2="616.0" stroke="#273247" stroke-width="2"/>
+<ellipse cx="105" cy="470" rx="102" ry="37" fill="#f8e2e2" stroke="#3a476f" stroke-width="2"/>
+<text x="105" y="476" text-anchor="middle" class="attribute">employee_code</text>
+<line x1="105" y1="760" x2="250.0" y2="616.0" stroke="#273247" stroke-width="2"/>
+<ellipse cx="105" cy="760" rx="102" ry="37" fill="#f8e2e2" stroke="#3a476f" stroke-width="2"/>
+<text x="105" y="766" text-anchor="middle" class="attribute">full_name</text>
+<line x1="430" y1="70" x2="555.0" y2="201.0" stroke="#273247" stroke-width="2"/>
+<ellipse cx="430" cy="70" rx="102" ry="37" fill="#f8e2e2" stroke="#3a476f" stroke-width="2"/>
+<text x="430" y="76" text-anchor="middle" class="attribute">start_time</text>
+<line x1="680" y1="85" x2="555.0" y2="201.0" stroke="#273247" stroke-width="2"/>
+<ellipse cx="680" cy="85" rx="102" ry="37" fill="#f8e2e2" stroke="#3a476f" stroke-width="2"/>
+<text x="680" y="91" text-anchor="middle" class="attribute">end_time</text>
+<line x1="760" y1="420" x2="970.0" y2="321.0" stroke="#273247" stroke-width="2"/>
+<ellipse cx="760" cy="420" rx="102" ry="37" fill="#f8e2e2" stroke="#3a476f" stroke-width="2"/>
+<text x="760" y="426" text-anchor="middle" class="attribute">work_date</text>
+<line x1="1120" y1="470" x2="970.0" y2="321.0" stroke="#273247" stroke-width="2"/>
+<ellipse cx="1120" cy="470" rx="102" ry="37" fill="#f8e2e2" stroke="#3a476f" stroke-width="2"/>
+<text x="1120" y="476" text-anchor="middle" class="attribute">status</text>
+<line x1="1220" y1="750" x2="1425.0" y2="616.0" stroke="#273247" stroke-width="2"/>
+<ellipse cx="1220" cy="750" rx="102" ry="37" fill="#f8e2e2" stroke="#3a476f" stroke-width="2"/>
+<text x="1220" y="756" text-anchor="middle" class="attribute">attendance_date</text>
+<line x1="1610" y1="740" x2="1425.0" y2="616.0" stroke="#273247" stroke-width="2"/>
+<ellipse cx="1610" cy="740" rx="102" ry="37" fill="#f8e2e2" stroke="#3a476f" stroke-width="2"/>
+<text x="1610" y="746" text-anchor="middle" class="attribute">worked_hours</text>
+<line x1="1210" y1="1190" x2="1390.0" y2="1041.0" stroke="#273247" stroke-width="2"/>
+<ellipse cx="1210" cy="1190" rx="102" ry="37" fill="#f8e2e2" stroke="#3a476f" stroke-width="2"/>
+<text x="1210" y="1196" text-anchor="middle" class="attribute">from_date</text>
+<line x1="1580" y1="1120" x2="1390.0" y2="1041.0" stroke="#273247" stroke-width="2"/>
+<ellipse cx="1580" cy="1120" rx="102" ry="37" fill="#f8e2e2" stroke="#3a476f" stroke-width="2"/>
+<text x="1580" y="1126" text-anchor="middle" class="attribute">status</text>
+<line x1="1610" y1="70" x2="1800.0" y2="201.0" stroke="#273247" stroke-width="2"/>
+<ellipse cx="1610" cy="70" rx="102" ry="37" fill="#f8e2e2" stroke="#3a476f" stroke-width="2"/>
+<text x="1610" y="76" text-anchor="middle" class="attribute">payroll_month</text>
+<line x1="1980" y1="510" x2="1850.0" y2="611.0" stroke="#273247" stroke-width="2"/>
+<ellipse cx="1980" cy="510" rx="102" ry="37" fill="#f8e2e2" stroke="#3a476f" stroke-width="2"/>
+<text x="1980" y="516" text-anchor="middle" class="attribute">net_salary</text>
+<line x1="2160" y1="800" x2="2140.0" y2="1041.0" stroke="#273247" stroke-width="2"/>
+<ellipse cx="2160" cy="800" rx="102" ry="37" fill="#f8e2e2" stroke="#3a476f" stroke-width="2"/>
+<text x="2160" y="806" text-anchor="middle" class="attribute">item_name</text>
+<line x1="2160" y1="1160" x2="2140.0" y2="1041.0" stroke="#273247" stroke-width="2"/>
+<ellipse cx="2160" cy="1160" rx="102" ry="37" fill="#f8e2e2" stroke="#3a476f" stroke-width="2"/>
+<text x="2160" y="1166" text-anchor="middle" class="attribute">amount</text>
+<line x1="1700" y1="1350" x2="1825.0" y2="1221.0" stroke="#273247" stroke-width="2"/>
+<ellipse cx="1700" cy="1350" rx="102" ry="37" fill="#f8e2e2" stroke="#3a476f" stroke-width="2"/>
+<text x="1700" y="1356" text-anchor="middle" class="attribute">standard_work_days</text>
+<line x1="370" y1="1310" x2="540.0" y2="1201.0" stroke="#273247" stroke-width="2"/>
+<ellipse cx="370" cy="1310" rx="102" ry="37" fill="#f8e2e2" stroke="#3a476f" stroke-width="2"/>
+<text x="370" y="1316" text-anchor="middle" class="attribute">action</text>
+<text x="70" y="1410" class="attribute">Các bảng nối user_roles, role_permissions và payroll_items được mô tả đầy đủ trong từ điển dữ liệu.</text>
+</svg>

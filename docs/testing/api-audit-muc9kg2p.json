@@ -1,0 +1,1390 @@
+{
+  "run": "muc9kg2p",
+  "createdAt": "2026-09-22T05:59:12.514Z",
+  "results": [
+    {
+      "name": "anonymous blocked",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/employees",
+        "expected": 401,
+        "actual": 401,
+        "code": "UNAUTHORIZED",
+        "message": "Bạn cần đăng nhập để tiếp tục"
+      }
+    },
+    {
+      "name": "bad password rejected",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/auth/login",
+        "expected": 401,
+        "actual": 401,
+        "code": "INVALID_CREDENTIALS",
+        "message": "Tên đăng nhập hoặc mật khẩu không đúng"
+      }
+    },
+    {
+      "name": "login admin",
+      "result": "PASS",
+      "evidence": {
+        "status": 200,
+        "roles": [
+          "ADMIN"
+        ]
+      }
+    },
+    {
+      "name": "login hr",
+      "result": "PASS",
+      "evidence": {
+        "status": 200,
+        "roles": [
+          "HR_MANAGER"
+        ]
+      }
+    },
+    {
+      "name": "login leader",
+      "result": "PASS",
+      "evidence": {
+        "status": 200,
+        "roles": [
+          "TEAM_LEADER"
+        ]
+      }
+    },
+    {
+      "name": "login employee",
+      "result": "PASS",
+      "evidence": {
+        "status": 200,
+        "roles": [
+          "EMPLOYEE"
+        ]
+      }
+    },
+    {
+      "name": "identity admin",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/auth/me",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "identity hr",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/auth/me",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "identity leader",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/auth/me",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "identity employee",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/auth/me",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "HR employee list",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/employees?size=100",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "departments",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/departments",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "positions",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/positions",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "work shifts",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/work-shifts",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "four leave types",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/leave-types",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "employee own profile",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/employees/me",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "leader team list",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/employees?size=100",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "leader outside employee forbidden",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/employees/1",
+        "expected": 403,
+        "actual": 403,
+        "code": "FORBIDDEN",
+        "message": "Bạn không có quyền thực hiện thao tác này"
+      }
+    },
+    {
+      "name": "leader outside attendance forbidden",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/attendance?from=2026-01-01&to=2026-12-31&employeeId=1",
+        "expected": 403,
+        "actual": 403,
+        "code": "FORBIDDEN",
+        "message": "Bạn không có quyền thực hiện thao tác này"
+      }
+    },
+    {
+      "name": "leader outside schedule forbidden",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/work-schedules?from=2026-01-01&to=2026-12-31&employeeId=1",
+        "expected": 403,
+        "actual": 403,
+        "code": "FORBIDDEN",
+        "message": "Bạn không có quyền thực hiện thao tác này"
+      }
+    },
+    {
+      "name": "employee other attendance forbidden",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/attendance?from=2026-01-01&to=2026-12-31&employeeId=1",
+        "expected": 403,
+        "actual": 403,
+        "code": "FORBIDDEN",
+        "message": "Bạn không có quyền thực hiện thao tác này"
+      }
+    },
+    {
+      "name": "users forbidden hr",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/users",
+        "expected": 403,
+        "actual": 403,
+        "code": "FORBIDDEN",
+        "message": "Bạn không có quyền thực hiện thao tác này"
+      }
+    },
+    {
+      "name": "users forbidden leader",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/users",
+        "expected": 403,
+        "actual": 403,
+        "code": "FORBIDDEN",
+        "message": "Bạn không có quyền thực hiện thao tác này"
+      }
+    },
+    {
+      "name": "users forbidden employee",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/users",
+        "expected": 403,
+        "actual": 403,
+        "code": "FORBIDDEN",
+        "message": "Bạn không có quyền thực hiện thao tác này"
+      }
+    },
+    {
+      "name": "reports forbidden leader",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/reports/employees?month=9&year=2026",
+        "expected": 403,
+        "actual": 403,
+        "code": "FORBIDDEN",
+        "message": "Bạn không có quyền thực hiện thao tác này"
+      }
+    },
+    {
+      "name": "create employee forbidden leader",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/employees",
+        "expected": 403,
+        "actual": 403,
+        "code": "FORBIDDEN",
+        "message": "Bạn không có quyền thực hiện thao tác này"
+      }
+    },
+    {
+      "name": "attendance write forbidden leader",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/attendance",
+        "expected": 403,
+        "actual": 403,
+        "code": "FORBIDDEN",
+        "message": "Bạn không có quyền thực hiện thao tác này"
+      }
+    },
+    {
+      "name": "schedule write forbidden leader",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/work-schedules",
+        "expected": 403,
+        "actual": 403,
+        "code": "FORBIDDEN",
+        "message": "Bạn không có quyền thực hiện thao tác này"
+      }
+    },
+    {
+      "name": "attendance read leader",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/attendance?from=2026-01-01&to=2026-12-31",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "attendance scope leader",
+      "result": "PASS",
+      "evidence": {
+        "count": 9,
+        "employeeIds": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "name": "payroll read leader",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/payrolls?year=2026",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "payroll scope leader",
+      "result": "PASS",
+      "evidence": {
+        "count": 2,
+        "employeeIds": [
+          2
+        ]
+      }
+    },
+    {
+      "name": "reports forbidden employee",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/reports/employees?month=9&year=2026",
+        "expected": 403,
+        "actual": 403,
+        "code": "FORBIDDEN",
+        "message": "Bạn không có quyền thực hiện thao tác này"
+      }
+    },
+    {
+      "name": "create employee forbidden employee",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/employees",
+        "expected": 403,
+        "actual": 403,
+        "code": "FORBIDDEN",
+        "message": "Bạn không có quyền thực hiện thao tác này"
+      }
+    },
+    {
+      "name": "attendance write forbidden employee",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/attendance",
+        "expected": 403,
+        "actual": 403,
+        "code": "FORBIDDEN",
+        "message": "Bạn không có quyền thực hiện thao tác này"
+      }
+    },
+    {
+      "name": "schedule write forbidden employee",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/work-schedules",
+        "expected": 403,
+        "actual": 403,
+        "code": "FORBIDDEN",
+        "message": "Bạn không có quyền thực hiện thao tác này"
+      }
+    },
+    {
+      "name": "attendance read employee",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/attendance?from=2026-01-01&to=2026-12-31",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "attendance scope employee",
+      "result": "PASS",
+      "evidence": {
+        "count": 6,
+        "employeeIds": [
+          3
+        ]
+      }
+    },
+    {
+      "name": "payroll read employee",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/payrolls?year=2026",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "payroll scope employee",
+      "result": "PASS",
+      "evidence": {
+        "count": 2,
+        "employeeIds": [
+          3
+        ]
+      }
+    },
+    {
+      "name": "employee list forbidden (dashboard dependency)",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/employees?size=5",
+        "expected": 403,
+        "actual": 403,
+        "code": "FORBIDDEN",
+        "message": "Bạn không có quyền thực hiện thao tác này"
+      }
+    },
+    {
+      "name": "missing employee 404",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/employees/99999999",
+        "expected": 404,
+        "actual": 404,
+        "code": "NOT_FOUND",
+        "message": "Không tìm thấy nhân viên"
+      }
+    },
+    {
+      "name": "invalid sort rejected with 400",
+      "result": "FAIL",
+      "evidence": {
+        "method": "GET",
+        "path": "/employees?sort=notAField,asc",
+        "expected": 400,
+        "actual": 500,
+        "code": "INTERNAL_ERROR",
+        "message": "Đã xảy ra lỗi hệ thống"
+      }
+    },
+    {
+      "name": "missing attendance dates 400",
+      "result": "FAIL",
+      "evidence": {
+        "method": "GET",
+        "path": "/attendance",
+        "expected": 400,
+        "actual": 500,
+        "code": "INTERNAL_ERROR",
+        "message": "Đã xảy ra lỗi hệ thống"
+      }
+    },
+    {
+      "name": "month-end report",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/reports/employees?month=9&year=2026",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "report totals agree",
+      "result": "PASS",
+      "evidence": {
+        "active": 2,
+        "onLeave": 1,
+        "terminated": 2,
+        "total": 5
+      }
+    },
+    {
+      "name": "admin reports",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/reports/employees?month=9&year=2026",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "HR admin report same",
+      "result": "PASS",
+      "evidence": {
+        "total": 5
+      }
+    },
+    {
+      "name": "all payrolls",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/payrolls",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "monthly payroll filter",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/payrolls?month=9&year=2026",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "monthly payroll selection",
+      "result": "PASS",
+      "evidence": {
+        "count": 4,
+        "total": 13269951.930000002
+      }
+    },
+    {
+      "name": "annual payroll summary",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/payrolls/annual-summary?year=2026",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "annual employee sum",
+      "result": "PASS",
+      "evidence": {
+        "actual": 4533653.85,
+        "expected": 4533653.85
+      }
+    },
+    {
+      "name": "payroll invalid month",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/payrolls?month=13",
+        "expected": [
+          400,
+          409
+        ],
+        "actual": 409,
+        "code": "CONFLICT",
+        "message": "Tháng lương không hợp lệ"
+      }
+    },
+    {
+      "name": "report invalid month",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/reports/employees?month=13",
+        "expected": [
+          400,
+          409
+        ],
+        "actual": 409,
+        "code": "CONFLICT",
+        "message": "Tháng hoặc năm báo cáo không hợp lệ"
+      }
+    },
+    {
+      "name": "baseline dashboard facts",
+      "result": "PASS",
+      "evidence": {
+        "employees": 5,
+        "active": 3,
+        "allPayrollRows": 8,
+        "allPayrollTotal": 16569951.930000002,
+        "monthPayrollRows": 4,
+        "monthPayrollTotal": 13269951.930000002
+      }
+    },
+    {
+      "name": "API sorting and paging",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/employees?page=0&size=2&sort=employeeCode,desc",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "API page respects size",
+      "result": "PASS",
+      "evidence": {
+        "page": 0,
+        "size": 2,
+        "total": 5,
+        "codes": [
+          "BA-TL-001",
+          "BA-HR-001"
+        ]
+      }
+    },
+    {
+      "name": "create TEST department",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/departments",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "create TEST position",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/positions",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "HR create employee",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/employees",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "Admin create employee",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/employees",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "duplicate employee code",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/employees",
+        "expected": 409,
+        "actual": 409,
+        "code": "CONFLICT",
+        "message": "Mã nhân viên đã tồn tại"
+      }
+    },
+    {
+      "name": "duplicate employee email",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/employees",
+        "expected": 409,
+        "actual": 409,
+        "code": "CONFLICT",
+        "message": "Email nhân viên đã tồn tại"
+      }
+    },
+    {
+      "name": "future join date rejected",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/employees",
+        "expected": 400,
+        "actual": 400,
+        "code": "VALIDATION_ERROR",
+        "message": "Dữ liệu gửi lên không hợp lệ"
+      }
+    },
+    {
+      "name": "Admin create account linked",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/users",
+        "expected": 201,
+        "actual": 201
+      }
+    },
+    {
+      "name": "duplicate username",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/users",
+        "expected": 409,
+        "actual": 409,
+        "code": "CONFLICT",
+        "message": "Tên tài khoản đã tồn tại"
+      }
+    },
+    {
+      "name": "login test",
+      "result": "PASS",
+      "evidence": {
+        "status": 200,
+        "roles": [
+          "EMPLOYEE"
+        ]
+      }
+    },
+    {
+      "name": "own profile invalid email",
+      "result": "PASS",
+      "evidence": {
+        "method": "PATCH",
+        "path": "/employees/me",
+        "expected": 400,
+        "actual": 400,
+        "code": "VALIDATION_ERROR",
+        "message": "Dữ liệu gửi lên không hợp lệ"
+      }
+    },
+    {
+      "name": "own profile update",
+      "result": "PASS",
+      "evidence": {
+        "method": "PATCH",
+        "path": "/employees/me",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "sensitive fields ignored",
+      "result": "PASS",
+      "evidence": {
+        "status": "ACTIVE",
+        "fullName": "TEST-muc9kg2p Nhân viên",
+        "departmentId": 5
+      }
+    },
+    {
+      "name": "profile duplicate email",
+      "result": "PASS",
+      "evidence": {
+        "method": "PATCH",
+        "path": "/employees/me",
+        "expected": 409,
+        "actual": 409,
+        "code": "CONFLICT",
+        "message": "Email nhân viên đã tồn tại"
+      }
+    },
+    {
+      "name": "promote TEST leader",
+      "result": "PASS",
+      "evidence": {
+        "method": "PUT",
+        "path": "/users/7/roles",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "role change effective for existing token",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/employees",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "restore TEST employee role",
+      "result": "PASS",
+      "evidence": {
+        "method": "PUT",
+        "path": "/users/7/roles",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "role revocation enforced",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/employees",
+        "expected": 403,
+        "actual": 403,
+        "code": "FORBIDDEN",
+        "message": "Bạn không có quyền thực hiện thao tác này"
+      }
+    },
+    {
+      "name": "lock TEST account",
+      "result": "PASS",
+      "evidence": {
+        "method": "PATCH",
+        "path": "/users/7/status",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "locked login blocked",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/auth/login",
+        "expected": [
+          401,
+          403
+        ],
+        "actual": 401,
+        "code": "INVALID_CREDENTIALS",
+        "message": "Tên đăng nhập hoặc mật khẩu không đúng"
+      }
+    },
+    {
+      "name": "locked existing JWT blocked",
+      "result": "FAIL",
+      "evidence": {
+        "method": "GET",
+        "path": "/employees/me",
+        "expected": [
+          401,
+          403
+        ],
+        "actual": 200
+      }
+    },
+    {
+      "name": "unlock TEST account",
+      "result": "PASS",
+      "evidence": {
+        "method": "PATCH",
+        "path": "/users/7/status",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "create ANNUAL leave",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/leave-requests",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "overlapping leave rejected",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/leave-requests",
+        "expected": 409,
+        "actual": 409,
+        "code": "CONFLICT",
+        "message": "Đơn nghỉ bị trùng thời gian"
+      }
+    },
+    {
+      "name": "other employee cannot cancel",
+      "result": "PASS",
+      "evidence": {
+        "method": "PATCH",
+        "path": "/leave-requests/3/cancel",
+        "expected": 403,
+        "actual": 403,
+        "code": "FORBIDDEN",
+        "message": "Bạn không có quyền thực hiện thao tác này"
+      }
+    },
+    {
+      "name": "employee cannot review",
+      "result": "PASS",
+      "evidence": {
+        "method": "PATCH",
+        "path": "/leave-requests/3/review",
+        "expected": 403,
+        "actual": 403,
+        "code": "FORBIDDEN",
+        "message": "Bạn không có quyền thực hiện thao tác này"
+      }
+    },
+    {
+      "name": "Admin can review without employee link",
+      "result": "FAIL",
+      "evidence": {
+        "method": "PATCH",
+        "path": "/leave-requests/3/review",
+        "expected": 200,
+        "actual": 404,
+        "code": "NOT_FOUND",
+        "message": "Tài khoản chưa liên kết hồ sơ nhân viên"
+      }
+    },
+    {
+      "name": "HR approves leave",
+      "result": "PASS",
+      "evidence": {
+        "method": "PATCH",
+        "path": "/leave-requests/3/review",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "cannot cancel approved leave",
+      "result": "PASS",
+      "evidence": {
+        "method": "PATCH",
+        "path": "/leave-requests/3/cancel",
+        "expected": 409,
+        "actual": 409,
+        "code": "CONFLICT",
+        "message": "Chỉ được hủy đơn đang chờ duyệt"
+      }
+    },
+    {
+      "name": "cannot review twice",
+      "result": "PASS",
+      "evidence": {
+        "method": "PATCH",
+        "path": "/leave-requests/3/review",
+        "expected": 409,
+        "actual": 409,
+        "code": "CONFLICT",
+        "message": "Đơn nghỉ không còn ở trạng thái chờ duyệt"
+      }
+    },
+    {
+      "name": "create SICK leave",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/leave-requests",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "HR rejects leave",
+      "result": "PASS",
+      "evidence": {
+        "method": "PATCH",
+        "path": "/leave-requests/4/review",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "create MATERNITY leave",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/leave-requests",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "cancel own pending leave",
+      "result": "PASS",
+      "evidence": {
+        "method": "PATCH",
+        "path": "/leave-requests/5/cancel",
+        "expected": [
+          200,
+          204
+        ],
+        "actual": 200
+      }
+    },
+    {
+      "name": "create RESIGNATION leave",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/leave-requests",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "cancel own pending leave",
+      "result": "PASS",
+      "evidence": {
+        "method": "PATCH",
+        "path": "/leave-requests/6/cancel",
+        "expected": [
+          200,
+          204
+        ],
+        "actual": 200
+      }
+    },
+    {
+      "name": "reversed leave dates rejected",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/leave-requests",
+        "expected": 409,
+        "actual": 409,
+        "code": "CONFLICT",
+        "message": "Ngày kết thúc phải sau hoặc bằng ngày bắt đầu"
+      }
+    },
+    {
+      "name": "create TEST contract",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/contracts",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "create TEST schedule",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/work-schedules",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "duplicate schedule rejected",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/work-schedules",
+        "expected": 409,
+        "actual": 409,
+        "code": "CONFLICT",
+        "message": "Nhân viên đã có lịch làm trong ngày này"
+      }
+    },
+    {
+      "name": "attendance with overtime",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/attendance",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "overtime calculation",
+      "result": "PASS",
+      "evidence": {
+        "worked": 8,
+        "overtime": 2
+      }
+    },
+    {
+      "name": "duplicate attendance rejected",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/attendance",
+        "expected": 409,
+        "actual": 409,
+        "code": "CONFLICT",
+        "message": "Nhân viên đã có chấm công trong ngày này"
+      }
+    },
+    {
+      "name": "reversed attendance time",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/attendance",
+        "expected": 409,
+        "actual": 409,
+        "code": "CONFLICT",
+        "message": "Giờ ra phải sau giờ vào"
+      }
+    },
+    {
+      "name": "attendance date must match schedule",
+      "result": "FAIL",
+      "evidence": {
+        "status": 200,
+        "recordDate": "2099-12-03",
+        "scheduleDate": "2099-12-01"
+      }
+    },
+    {
+      "name": "absence entry",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/attendance",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "absence must have zero worked/overtime",
+      "result": "FAIL",
+      "evidence": {
+        "worked": 8,
+        "overtime": 1,
+        "status": "ABSENT"
+      }
+    },
+    {
+      "name": "create TEST payroll period",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/payroll-periods",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "duplicate payroll period rejected",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/payroll-periods",
+        "expected": 409,
+        "actual": 409,
+        "code": "CONFLICT",
+        "message": "Kỳ lương đã tồn tại"
+      }
+    },
+    {
+      "name": "cannot lock empty payroll",
+      "result": "PASS",
+      "evidence": {
+        "method": "PATCH",
+        "path": "/payroll-periods/3/lock",
+        "expected": 409,
+        "actual": 409,
+        "code": "CONFLICT",
+        "message": "Chưa có bảng lương để khóa"
+      }
+    },
+    {
+      "name": "generate TEST payroll",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/payroll-periods/3/generate",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "payroll excludes absent overtime",
+      "result": "FAIL",
+      "evidence": {
+        "expected": 1875000,
+        "actual": 2437500,
+        "days": 1,
+        "overtime": 5
+      }
+    },
+    {
+      "name": "lock TEST payroll",
+      "result": "PASS",
+      "evidence": {
+        "method": "PATCH",
+        "path": "/payroll-periods/3/lock",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "locked payroll cannot regenerate",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/payroll-periods/3/generate",
+        "expected": 409,
+        "actual": 409,
+        "code": "CONFLICT",
+        "message": "Kỳ lương đã khóa hoặc đã thanh toán"
+      }
+    },
+    {
+      "name": "TEST employee only own locked payroll",
+      "result": "PASS",
+      "evidence": {
+        "count": 1,
+        "status": "LOCKED"
+      }
+    },
+    {
+      "name": "HR soft terminate TEST",
+      "result": "PASS",
+      "evidence": {
+        "method": "DELETE",
+        "path": "/employees/7",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "terminated employee history retained",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/employees/7",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "termination stamps end date",
+      "result": "PASS",
+      "evidence": {
+        "status": "TERMINATED",
+        "endDate": "2026-09-22"
+      }
+    },
+    {
+      "name": "audit logs available",
+      "result": "PASS",
+      "evidence": {
+        "method": "GET",
+        "path": "/audit-logs",
+        "expected": 200,
+        "actual": 200
+      }
+    },
+    {
+      "name": "role/status/leave changes audited",
+      "result": "PASS",
+      "evidence": {
+        "actions": [
+          "EMPLOYEE_TERMINATED",
+          "PAYROLL_LOCKED",
+          "LEAVE_REVIEWED",
+          "STATUS_CHANGED",
+          "ROLE_CHANGED",
+          "EMPLOYEE_PROFILE_UPDATED",
+          "ACCOUNT_CREATED",
+          "EMPLOYEE_CREATED",
+          "ACCOUNT_DELETED"
+        ]
+      }
+    },
+    {
+      "name": "delete TEST account",
+      "result": "PASS",
+      "evidence": {
+        "method": "DELETE",
+        "path": "/users/7",
+        "expected": 204,
+        "actual": 204
+      }
+    },
+    {
+      "name": "deleted login blocked",
+      "result": "PASS",
+      "evidence": {
+        "method": "POST",
+        "path": "/auth/login",
+        "expected": 401,
+        "actual": 401,
+        "code": "INVALID_CREDENTIALS",
+        "message": "Tên đăng nhập hoặc mật khẩu không đúng"
+      }
+    },
+    {
+      "name": "Admin soft terminate TEST",
+      "result": "PASS",
+      "evidence": {
+        "method": "DELETE",
+        "path": "/employees/6",
+        "expected": 200,
+        "actual": 200
+      }
+    }
+  ],
+  "fixtures": {
+    "prefix": "TEST-muc9kg2p",
+    "employees": [
+      {
+        "id": 6,
+        "code": "TEST-muc9kg2p"
+      },
+      {
+        "id": 7,
+        "code": "TEST-muc9kg2p-B"
+      }
+    ],
+    "users": [
+      {
+        "id": 7,
+        "username": "test.muc9kg2p"
+      }
+    ],
+    "leaves": [
+      {
+        "id": 3
+      },
+      {
+        "id": 4
+      },
+      {
+        "id": 5
+      },
+      {
+        "id": 6
+      }
+    ],
+    "schedules": [
+      {
+        "id": 16
+      }
+    ],
+    "attendance": [
+      {
+        "id": 16
+      },
+      {
+        "id": 17
+      },
+      {
+        "id": 18
+      }
+    ],
+    "periods": [
+      {
+        "id": 3,
+        "month": 12,
+        "year": 2099
+      }
+    ],
+    "catalogs": [
+      {
+        "type": "department",
+        "id": 5,
+        "name": "TEST-muc9kg2p"
+      },
+      {
+        "type": "position",
+        "id": 8,
+        "name": "TEST-muc9kg2p"
+      }
+    ],
+    "contractId": 6
+  }
+}

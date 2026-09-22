@@ -1,0 +1,279 @@
+@startuml ERD_HRM_BinhAn
+
+title ERD - Hệ thống Quản lý Nhân sự HRM Trung tâm Ngoại ngữ Bình An
+
+left to right direction
+hide methods
+hide stereotypes
+skinparam linetype ortho
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam nodesep 35
+skinparam ranksep 45
+skinparam entity {
+    BackgroundColor #E8F1FF
+    BorderColor #1F3A5F
+    FontColor #172033
+    AttributeFontColor #172033
+    ArrowColor #475569
+}
+skinparam package {
+    BackgroundColor #F8FAFC
+    BorderColor #CBD5E1
+    FontColor #1F3A5F
+}
+
+package "IDENTITY & ACCESS" {
+    entity "ROLES" as roles {
+        * id : BIGINT <<PK>>
+        --
+        * code : VARCHAR(30) <<UK>>
+        * name : VARCHAR(100)
+    }
+
+    entity "PERMISSIONS" as permissions {
+        * id : BIGINT <<PK>>
+        --
+        * code : VARCHAR(80) <<UK>>
+        * name : VARCHAR(120)
+    }
+
+    entity "USERS" as users {
+        * id : BIGINT <<PK>>
+        --
+        * username : VARCHAR(60) <<UK>>
+        * password_hash : VARCHAR(255)
+        * display_name : VARCHAR(120)
+        * status : VARCHAR(20)
+        employee_id : BIGINT <<FK, UK>>
+    }
+
+    entity "USER_ROLES" as user_roles {
+        * user_id : BIGINT <<PK, FK>>
+        * role_id : BIGINT <<PK, FK>>
+    }
+
+    entity "ROLE_PERMISSIONS" as role_permissions {
+        * role_id : BIGINT <<PK, FK>>
+        * permission_id : BIGINT <<PK, FK>>
+    }
+
+    entity "AUDIT_LOGS" as audit_logs {
+        * id : BIGINT <<PK>>
+        --
+        * actor_username : VARCHAR(60)
+        * action : VARCHAR(80)
+        * entity_name : VARCHAR(80)
+        entity_id : BIGINT
+        * created_at : DATETIME
+        detail : VARCHAR(500)
+    }
+}
+
+package "ORGANIZATION & PEOPLE" {
+    entity "DEPARTMENTS" as departments {
+        * id : BIGINT <<PK>>
+        --
+        * name : VARCHAR(100) <<UK>>
+        description : VARCHAR(255)
+        * active : BOOLEAN
+    }
+
+    entity "POSITIONS" as positions {
+        * id : BIGINT <<PK>>
+        --
+        * title : VARCHAR(100) <<UK>>
+        * default_allowance : DECIMAL(14,2)
+        * active : BOOLEAN
+    }
+
+    entity "EMPLOYEES" as employees {
+        * id : BIGINT <<PK>>
+        --
+        * employee_code : VARCHAR(30) <<UK>>
+        * full_name : VARCHAR(120)
+        * gender : VARCHAR(20)
+        national_id : VARCHAR(20) <<UK>>
+        * phone : VARCHAR(20)
+        * email : VARCHAR(120) <<UK>>
+        address : VARCHAR(255)
+        education_level : VARCHAR(120)
+        * join_date : DATE
+        end_date : DATE
+        * status : VARCHAR(20)
+        * department_id : BIGINT <<FK>>
+        * position_id : BIGINT <<FK>>
+        manager_id : BIGINT <<FK>>
+    }
+
+    entity "EMPLOYMENT_CONTRACTS" as contracts {
+        * id : BIGINT <<PK>>
+        --
+        * employee_id : BIGINT <<FK>>
+        * contract_number : VARCHAR(50) <<UK>>
+        * contract_type : VARCHAR(80)
+        * start_date : DATE
+        end_date : DATE
+        * base_salary : DECIMAL(14,2)
+        * allowance : DECIMAL(14,2)
+        * status : VARCHAR(20)
+    }
+
+    entity "TEAMS" as teams {
+        * id : BIGINT <<PK>>
+        --
+        * name : VARCHAR(100) <<UK>>
+        * leader_id : BIGINT <<FK>>
+        * active : BOOLEAN
+    }
+
+    entity "TEAM_MEMBERS" as team_members {
+        * id : BIGINT <<PK>>
+        --
+        * team_id : BIGINT <<FK>>
+        * employee_id : BIGINT <<FK>>
+        * active : BOOLEAN
+        --
+        unique_team_employee : UNIQUE(team_id, employee_id)
+    }
+}
+
+package "ATTENDANCE & LEAVE" {
+    entity "WORK_SHIFTS" as work_shifts {
+        * id : BIGINT <<PK>>
+        --
+        * name : VARCHAR(80) <<UK>>
+        * start_time : TIME
+        * end_time : TIME
+        * overtime_rate : DECIMAL(5,2)
+        * active : BOOLEAN
+    }
+
+    entity "WORK_SCHEDULES" as work_schedules {
+        * id : BIGINT <<PK>>
+        --
+        * employee_id : BIGINT <<FK>>
+        * shift_id : BIGINT <<FK>>
+        * work_date : DATE
+        * status : VARCHAR(20)
+        note : VARCHAR(255)
+        --
+        unique_employee_work_date : UNIQUE(employee_id, work_date)
+    }
+
+    entity "ATTENDANCE_RECORDS" as attendance_records {
+        * id : BIGINT <<PK>>
+        --
+        * employee_id : BIGINT <<FK>>
+        schedule_id : BIGINT <<FK>>
+        * attendance_date : DATE
+        check_in : TIME
+        check_out : TIME
+        * worked_hours : DECIMAL(6,2)
+        * overtime_hours : DECIMAL(6,2)
+        * status : VARCHAR(20)
+        --
+        unique_employee_attendance_date : UNIQUE(employee_id, attendance_date)
+    }
+
+    entity "LEAVE_TYPES" as leave_types {
+        * id : BIGINT <<PK>>
+        --
+        * code : VARCHAR(30) <<UK>>
+        * name : VARCHAR(100)
+        * annual_days : INT
+    }
+
+    entity "LEAVE_REQUESTS" as leave_requests {
+        * id : BIGINT <<PK>>
+        --
+        * employee_id : BIGINT <<FK>>
+        * leave_type_id : BIGINT <<FK>>
+        * from_date : DATE
+        * to_date : DATE
+        * reason : VARCHAR(500)
+        * submitted_at : DATETIME
+        * status : VARCHAR(20)
+        reviewer_id : BIGINT <<FK>>
+        reviewed_at : DATETIME
+        rejection_reason : VARCHAR(255)
+    }
+}
+
+package "PAYROLL" {
+    entity "SALARY_SETTINGS" as salary_settings {
+        * id : BIGINT <<PK>>
+        --
+        * standard_work_days : INT
+        * overtime_multiplier : DECIMAL(5,2)
+        * effective_from : DATE
+    }
+
+    entity "PAYROLL_PERIODS" as payroll_periods {
+        * id : BIGINT <<PK>>
+        --
+        * payroll_month : INT
+        * payroll_year : INT
+        * from_date : DATE
+        * to_date : DATE
+        * status : VARCHAR(20)
+        --
+        unique_payroll_period : UNIQUE(payroll_month, payroll_year)
+    }
+
+    entity "PAYROLLS" as payrolls {
+        * id : BIGINT <<PK>>
+        --
+        * period_id : BIGINT <<FK>>
+        * employee_id : BIGINT <<FK>>
+        * base_salary : DECIMAL(14,2)
+        * worked_days : DECIMAL(8,2)
+        * overtime_hours : DECIMAL(8,2)
+        * overtime_pay : DECIMAL(14,2)
+        * allowances : DECIMAL(14,2)
+        * deductions : DECIMAL(14,2)
+        * net_salary : DECIMAL(14,2)
+        * status : VARCHAR(20)
+        --
+        unique_payroll_employee : UNIQUE(period_id, employee_id)
+    }
+
+    entity "PAYROLL_ITEMS" as payroll_items {
+        * id : BIGINT <<PK>>
+        --
+        * payroll_id : BIGINT <<FK>>
+        * item_name : VARCHAR(100)
+        * item_type : VARCHAR(20)
+        * amount : DECIMAL(14,2)
+        note : VARCHAR(255)
+    }
+}
+
+roles ||--o{ user_roles : "gán vai trò"
+users ||--o{ user_roles : "có"
+roles ||--o{ role_permissions : "được cấp"
+permissions ||--o{ role_permissions : "gồm"
+users |o--o| employees : "liên kết"
+
+departments ||--o{ employees : "quản lý"
+positions ||--o{ employees : "phân công"
+employees |o--o{ employees : "quản lý trực tiếp"
+employees ||--o{ contracts : "ký"
+employees ||--o{ team_members : "tham gia"
+teams ||--o{ team_members : "bao gồm"
+employees ||--o{ teams : "làm trưởng nhóm"
+
+employees ||--o{ work_schedules : "nhận lịch"
+work_shifts ||--o{ work_schedules : "định nghĩa"
+employees ||--o{ attendance_records : "chấm công"
+work_schedules |o--o{ attendance_records : "hỗ trợ"
+employees ||--o{ leave_requests : "gửi đơn"
+leave_types ||--o{ leave_requests : "phân loại"
+employees |o--o{ leave_requests : "duyệt"
+
+payroll_periods ||--o{ payrolls : "chứa"
+employees ||--o{ payrolls : "nhận lương"
+payrolls ||--o{ payroll_items : "chi tiết"
+salary_settings ||--o{ payrolls : "áp dụng"
+
+@enduml

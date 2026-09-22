@@ -17,6 +17,12 @@ public class PayrollController {
     @PostMapping("/payroll-periods")
     @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
     public PayrollDtos.PeriodResponse createPeriod(@Valid @RequestBody PayrollDtos.PeriodRequest input) { return service.createPeriod(input); }
+
+    @GetMapping("/payroll-periods")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
+    public List<PayrollDtos.PeriodResponse> periods(@RequestParam(required = false) Integer month, @RequestParam(required = false) Integer year) {
+        return service.periods(month, year);
+    }
     @PostMapping("/payroll-periods/{id}/generate")
     @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
     public List<PayrollDtos.PayrollResponse> generate(@PathVariable Long id) { return service.generate(id); }
@@ -25,10 +31,28 @@ public class PayrollController {
     public PayrollDtos.PeriodResponse lock(@PathVariable Long id) { return service.lock(id); }
     @GetMapping("/payrolls")
     @PreAuthorize("isAuthenticated()")
-    public List<PayrollDtos.PayrollResponse> list(@AuthenticationPrincipal AppUserPrincipal principal) {
+    public List<PayrollDtos.PayrollResponse> list(@AuthenticationPrincipal AppUserPrincipal principal,
+                                                  @RequestParam(required = false) Integer month,
+                                                  @RequestParam(required = false) Integer year) {
         boolean all = principal.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_HR_MANAGER"));
         Long employeeId = principal.getUser().getEmployee() == null ? null : principal.getUser().getEmployee().getId();
         if (!all && employeeId == null) throw new ResourceNotFoundException("Tài khoản chưa liên kết hồ sơ nhân viên");
-        return service.list(employeeId, all);
+        return service.list(employeeId, all, month, year);
+    }
+
+    @GetMapping("/payrolls/annual-summary")
+    @PreAuthorize("isAuthenticated()")
+    public PayrollDtos.AnnualSummary annualSummary(@AuthenticationPrincipal AppUserPrincipal principal,
+                                                   @RequestParam(required = false) Integer year) {
+        boolean all = principal.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_HR_MANAGER"));
+        Long employeeId = principal.getUser().getEmployee() == null ? null : principal.getUser().getEmployee().getId();
+        if (!all && employeeId == null) throw new ResourceNotFoundException("Tài khoản chưa liên kết hồ sơ nhân viên");
+        return service.annualSummary(employeeId, all, year);
+    }
+
+    @GetMapping("/payrolls/calculation-rule")
+    @PreAuthorize("isAuthenticated()")
+    public PayrollDtos.CalculationRule calculationRule() {
+        return service.calculationRule();
     }
 }
