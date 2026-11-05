@@ -12,7 +12,7 @@ Hệ thống HRM đã có các module chính: đăng nhập JWT/RBAC, Admin, nh�
 
 - Backend `mvn verify`: **72 test, 0 lỗi, 0 thất bại**, 16 lớp test, trên H2 (05/11/2026; thêm sửa hồ sơ nhân viên và màn hình hợp đồng).
 - Backend MySQL 8.4 tạm: **32/32 test đạt** trước khi bổ sung test phân trang.
-- Frontend `npm run test`: **66/66 test, 21 file đạt** (05/11/2026).
+- Frontend `npm run test`: **72/72 test, 23 file đạt** (05/11/2026; thêm Trợ lý AI dạng chatbox).
 - Frontend `npm run check`: typecheck và production build đạt.
 - Docker frontend/backend/database đã build và khởi động thành công.
 - API audit live: **58/58 kiểm tra đạt**, xem `docs/testing/api-audit-mue4w1zp.json`.

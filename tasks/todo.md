@@ -80,3 +80,13 @@ Runtime note: Docker Compose cần Docker Desktop đang chạy trước khi dùn
 - [x] Docker: thêm `TZ=${TZ:-Asia/Ho_Chi_Minh}` cho backend và MySQL trong `docker-compose.yml` (người dùng đồng ý 05/11/2026), thêm `TZ` vào `.env.example`. Trước đó backend chạy UTC: trang Admin hiện giờ sớm 7 tiếng và `LocalDate.now()` lệch ngày trong 00:00–07:00 giờ Việt Nam.
 - [x] Đã áp dụng (`docker compose up -d db backend`, giữ volume): container backend và MySQL đều `+07` (`NOW()` khớp giờ máy), backend health UP, trang Admin hiện giờ audit đúng (bản ghi 13:53 hiện 13:53 thay vì 06:53). Chưa có thao tác ghi mới sau đổi múi giờ để đối chiếu giờ lưu. Fixture mới: nhân viên `TEST-UI-1105` (id 9) và 2 hợp đồng `HD-TEST-UI-1105-*`.
 
+# Trợ lý AI dạng chatbox — 05/11/2026
+
+- [x] Nút chat nổi góc phải dưới trên mọi màn hình (ẩn ở trang Trợ lý AI), khung chat 400px; mobile ≤480px toàn màn hình; Esc/× đóng và trả focus về nút.
+- [x] Hội thoại dạng bong bóng, hiệu ứng "đang soạn", Enter gửi / Shift+Enter xuống dòng, chip gợi ý gửi ngay; trang Trợ lý AI dùng chung component `AssistantChat`.
+- [x] Bản nháp (đổi email, tạo/hủy đơn nghỉ) là thẻ trong chat, vẫn bắt buộc "Xác nhận thực hiện"; hỏi câu khác thì bản nháp tự bỏ, không ghi dữ liệu, và lịch sử gửi AI ghi đúng "đã bỏ bản nháp".
+- [x] Tin nhắn hiển thị giữ khi chuyển trang trong phiên đăng nhập (React memory, tối đa 60 tin); backend vẫn chỉ nhận 4 lượt; xóa khi đăng xuất/đổi tài khoản/tải lại; không lưu browser storage.
+- [x] Số liệu trong câu trả lời định dạng kiểu Việt Nam và dịch mã trạng thái (`formatFactValue`).
+- [x] nginx: `index.html` gửi `Cache-Control: no-cache`, `/assets/` cache dài hạn `immutable` (trước đây trình duyệt giữ bản cũ sau khi build lại).
+- [x] Frontend 72/72 test (23 file), typecheck/build; Docker + Ollama `qwen3.5:4b`: hỏi lương, hỏi nối tiếp "Còn tháng 10?", chuyển trang giữ hội thoại, mở toàn trang, bản nháp đổi email bị bỏ không ghi (email giữ nguyên); 1440/1024/768/320px, console sạch.
+

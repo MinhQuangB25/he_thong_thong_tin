@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import { useAuth } from '../context/AuthContext'
 import type { Role } from '../api/types'
 import { Icon, type IconName } from './Icon'
+import { AssistantLauncher } from './AssistantLauncher'
 
 export type Screen = 'dashboard' | 'admin' | 'employees' | 'contracts' | 'leave' | 'attendance' | 'payroll' | 'reports' | 'profile' | 'assistant'
 type NavItem = { id: Screen; label: string; icon: IconName; roles?: Role[] }
@@ -53,6 +54,6 @@ export function AppShell({ screen, onNavigate, children }: { screen: Screen; onN
       <nav aria-label={isAdmin ? 'Điều hướng quản trị' : 'Điều hướng chính'}>{nav.map(item => <button type="button" aria-current={screen === item.id ? 'page' : undefined} className={screen === item.id ? 'nav-item active' : 'nav-item'} onClick={() => navigate(item.id)} key={item.id}><Icon name={item.icon} />{item.label}</button>)}</nav>
       <div className="sidebar-foot"><div className="secure-note"><Icon name="shield" /> <span>{isAdmin ? 'Khu vực Admin riêng' : 'Bình An HRM'}<small>{isAdmin ? 'Quản lý quyền truy cập' : 'Đồng hành cùng đội ngũ'}</small></span></div><button type="button" className="logout-button" onClick={logout}>Đăng xuất <Icon name="logout" /></button></div>
     </aside>
-    <main className="main-content"><header className="topbar"><button type="button" ref={menuButton} className="mobile-menu" aria-label="Mở menu" aria-expanded={menuOpen} aria-controls={sidebarId} onClick={() => setMenuOpen(open => !open)}><Icon name="menu" /></button><div className="breadcrumb">{isAdmin ? 'Quản trị' : 'Không gian làm việc'} <span>/</span> <strong>{nav.find(item => item.id === screen)?.label}</strong></div><div className="top-actions"><span className="workspace-tag">{isAdmin ? 'ADMIN' : 'HRM'}</span><div className="user-chip"><span className="avatar">{user?.displayName?.slice(0, 1)}</span><span><strong>{user?.displayName}</strong><small>{roles.map(role => roleLabels[role]).join(' · ')}</small></span></div></div></header><div className="page-content" id="workspace-content" tabIndex={-1}>{children}</div></main>
+    <main className="main-content"><header className="topbar"><button type="button" ref={menuButton} className="mobile-menu" aria-label="Mở menu" aria-expanded={menuOpen} aria-controls={sidebarId} onClick={() => setMenuOpen(open => !open)}><Icon name="menu" /></button><div className="breadcrumb">{isAdmin ? 'Quản trị' : 'Không gian làm việc'} <span>/</span> <strong>{nav.find(item => item.id === screen)?.label}</strong></div><div className="top-actions"><span className="workspace-tag">{isAdmin ? 'ADMIN' : 'HRM'}</span><div className="user-chip"><span className="avatar">{user?.displayName?.slice(0, 1)}</span><span><strong>{user?.displayName}</strong><small>{roles.map(role => roleLabels[role]).join(' · ')}</small></span></div></div></header><div className="page-content" id="workspace-content" tabIndex={-1}>{children}</div></main>{screen !== 'assistant' && nav.some(item => item.id === 'assistant') && <AssistantLauncher onOpenPage={() => onNavigate('assistant')} />}
   </div>
 }

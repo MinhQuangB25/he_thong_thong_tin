@@ -8,3 +8,13 @@ export const leaveStatusLabel = (status: string) => leaveStatus[status] ?? statu
 export const employeeStatusLabel = (status: string) => employeeStatus[status] ?? status
 export const payrollStatusLabel = (status: string) => payrollStatus[status] ?? status
 export const attendanceStatusLabel = (status: string) => attendanceStatus[status] ?? status
+
+const statusCodes: Record<string, string> = { ...leaveStatus, ...payrollStatus, ...attendanceStatus, ACTIVE: 'Đang hoạt động', ON_LEAVE: 'Đang nghỉ', TERMINATED: 'Đã nghỉ việc' }
+
+/** Display form for assistant facts: plain numbers in Vietnamese format, known status codes translated. */
+export function formatFactValue(value: string): string {
+  const trimmed = value.trim()
+  if (/^-?\d+(\.\d+)?$/.test(trimmed)) return Number(trimmed).toLocaleString('vi-VN', { maximumFractionDigits: 2 })
+  return statusCodes[trimmed] ?? value
+}
+

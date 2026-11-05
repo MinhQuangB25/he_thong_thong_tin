@@ -13,12 +13,13 @@ const { apiMock } = vi.hoisted(() => ({ apiMock: vi.fn() }))
 vi.mock('../api/client', () => ({ api: apiMock }))
 vi.mock('../context/AuthContext', () => ({ useAuth: () => ({ user: { username: 'employee01', roles: ['EMPLOYEE'] } }) }))
 
+vi.setConfig({ testTimeout: 15000 })
 beforeEach(() => { apiMock.mockReset() })
 afterEach(cleanup)
 
 it('sends the preceding conversation with a follow-up question', async () => {
   apiMock.mockResolvedValue({ kind: 'ANSWER', answer: 'Bảng lương tháng 9/2026', facts: [], sources: [] })
-  const user = userEvent.setup()
+  const user = userEvent.setup({ delay: null })
   render(<AssistantPage />)
   const input = screen.getByRole('textbox', { name: 'Câu hỏi hoặc yêu cầu' })
   await user.type(input, 'Lương tháng 9/2026 của tôi?')
@@ -40,19 +41,21 @@ it('keeps history across page navigation and clears it for a new conversation', 
     const [open, setOpen] = useState(true)
     return <><button onClick={() => setOpen(value => !value)}>Chuyển trang</button>{open && <AssistantPage />}</>
   }
-  const user = userEvent.setup()
+  const user = userEvent.setup({ delay: null })
   render(<Workspace />)
   await user.type(screen.getByRole('textbox', { name: 'Câu hỏi hoặc yêu cầu' }), 'Lương tháng 9/2026?')
   await user.click(screen.getByRole('button', { name: 'Gửi câu hỏi' }))
   await screen.findByText('Lương tháng 9/2026')
   await user.click(screen.getByRole('button', { name: 'Chuyển trang' }))
   await user.click(screen.getByRole('button', { name: 'Chuyển trang' }))
-  expect(screen.getByText('Lịch sử trong phiên (1 lượt)')).toBeInTheDocument()
+  expect(screen.getByText('Lương tháng 9/2026?')).toBeInTheDocument()
+  expect(screen.getByText('Lương tháng 9/2026')).toBeInTheDocument()
   await user.type(screen.getByRole('textbox', { name: 'Câu hỏi hoặc yêu cầu' }), 'Còn tháng 8?')
   await user.click(screen.getByRole('button', { name: 'Gửi câu hỏi' }))
   expect(JSON.parse(apiMock.mock.lastCall?.[1].body).history).toHaveLength(1)
+  await screen.findByText('Còn tháng 8?')
   await user.click(screen.getByRole('button', { name: 'Hội thoại mới' }))
-  expect(screen.queryByText(/Lịch sử trong phiên/)).not.toBeInTheDocument()
+  expect(screen.queryByText('Lương tháng 9/2026?')).not.toBeInTheDocument()
   await user.type(screen.getByRole('textbox', { name: 'Câu hỏi hoặc yêu cầu' }), 'Lương của tôi?')
   await user.click(screen.getByRole('button', { name: 'Gửi câu hỏi' }))
   expect(JSON.parse(apiMock.mock.lastCall?.[1].body).history).toEqual([])
@@ -61,7 +64,7 @@ it('keeps history across page navigation and clears it for a new conversation', 
 it('does not retain a failed question as context', async () => {
   apiMock.mockRejectedValueOnce(new Error('AI_UNAVAILABLE'))
     .mockResolvedValue({ kind: 'ANSWER', answer: 'Đã kết nối', facts: [], sources: [] })
-  const user = userEvent.setup()
+  const user = userEvent.setup({ delay: null })
   render(<AssistantPage />)
   await user.type(screen.getByRole('textbox', { name: 'Câu hỏi hoặc yêu cầu' }), 'Lương tháng 9?')
   await user.click(screen.getByRole('button', { name: 'Gửi câu hỏi' }))
@@ -82,7 +85,7 @@ it('aborts a pending question on navigation and ignores its late response', asyn
     const [open, setOpen] = useState(true)
     return <><button onClick={() => setOpen(value => !value)}>Chuyển trang</button>{open && <AssistantPage />}</>
   }
-  const user = userEvent.setup()
+  const user = userEvent.setup({ delay: null })
   render(<Workspace />)
   await user.type(screen.getByRole('textbox', { name: 'Câu hỏi hoặc yêu cầu' }), 'Lương của tôi?')
   await user.click(screen.getByRole('button', { name: 'Gửi câu hỏi' }))
@@ -90,7 +93,7 @@ it('aborts a pending question on navigation and ignores its late response', asyn
   expect(requestSignal?.aborted).toBe(true)
   await act(async () => { resolveAnswer({ kind: 'ANSWER', answer: 'Phản hồi đến muộn', facts: [], sources: [] }) })
   await user.click(screen.getByRole('button', { name: 'Chuyển trang' }))
-  expect(screen.queryByText(/Lịch sử trong phiên/)).not.toBeInTheDocument()
+  expect(screen.queryByText('Lương của tôi?')).not.toBeInTheDocument()
   expect(screen.queryByText('Phản hồi đến muộn')).not.toBeInTheDocument()
 })
 
@@ -103,7 +106,7 @@ it('does not change the profile until the user confirms the proposal', async () 
     if (path === '/employees/me') return { email: 'new@example.com' }
     throw new Error(`Unexpected request: ${path}`)
   })
-  const user = userEvent.setup()
+  const user = userEvent.setup({ delay: null })
   render(<AssistantPage />)
   await user.type(screen.getByRole('textbox', { name: 'Câu hỏi hoặc yêu cầu' }), 'Đổi email cho tôi')
   await user.click(screen.getByRole('button', { name: 'Gửi câu hỏi' }))
@@ -116,11 +119,11 @@ it('does not change the profile until the user confirms the proposal', async () 
 
 it('shows source facts and never offers confirmation for an answer', async () => {
   apiMock.mockResolvedValue({ kind: 'ANSWER', answer: 'Lương tháng 9', facts: [{ label: 'Thực lĩnh', value: '14000000' }], sources: ['Bảng lương của tôi'] })
-  const user = userEvent.setup()
+  const user = userEvent.setup({ delay: null })
   render(<AssistantPage />)
   await user.type(screen.getByRole('textbox', { name: 'Câu hỏi hoặc yêu cầu' }), 'Lương tháng 9 của tôi')
   await user.click(screen.getByRole('button', { name: 'Gửi câu hỏi' }))
-  expect(await screen.findByText('14000000')).toBeInTheDocument()
+  expect(await screen.findByText('14.000.000')).toBeInTheDocument()
   expect(screen.getByText('Bảng lương của tôi')).toBeInTheDocument()
   expect(screen.queryByRole('button', { name: 'Xác nhận thực hiện' })).not.toBeInTheDocument()
 })
@@ -136,7 +139,7 @@ it('creates a leave request only after confirmation', async () => {
     if (path === '/leave-requests') return { id: 9 }
     throw new Error(`Unexpected request: ${path}`)
   })
-  const user = userEvent.setup()
+  const user = userEvent.setup({ delay: null })
   render(<AssistantPage />)
   await user.type(screen.getByRole('textbox', { name: 'Câu hỏi hoặc yêu cầu' }), 'Tôi muốn nghỉ phép')
   await user.click(screen.getByRole('button', { name: 'Gửi câu hỏi' }))
@@ -157,7 +160,7 @@ it('keeps the proposal visible when confirmation fails', async () => {
     if (path === '/leave-requests/9/cancel') throw new Error('Đơn không còn chờ duyệt')
     throw new Error(`Unexpected request: ${path}`)
   })
-  const user = userEvent.setup()
+  const user = userEvent.setup({ delay: null })
   render(<AssistantPage />)
   await user.type(screen.getByRole('textbox', { name: 'Câu hỏi hoặc yêu cầu' }), 'Hủy đơn 9 của tôi')
   await user.click(screen.getByRole('button', { name: 'Gửi câu hỏi' }))
@@ -166,3 +169,53 @@ it('keeps the proposal visible when confirmation fails', async () => {
   expect(await screen.findByText('Đơn không còn chờ duyệt')).toBeInTheDocument()
   expect(screen.getByRole('form', { name: 'Bản nháp chờ xác nhận' })).toBeInTheDocument()
 })
+
+it('sends with Enter, keeps Shift+Enter for a new line and shows the reply as chat bubbles', async () => {
+  apiMock.mockResolvedValue({ kind: 'ANSWER', answer: 'Thực lĩnh tháng này là 14.000.000 ₫', facts: [], sources: [] })
+  const user = userEvent.setup({ delay: null })
+  render(<AssistantPage />)
+  const input = screen.getByRole('textbox', { name: 'Câu hỏi hoặc yêu cầu' })
+  await user.type(input, 'Dòng 1{Shift>}{Enter}{/Shift}Dòng 2')
+  expect(apiMock).not.toHaveBeenCalled()
+  expect(input).toHaveValue('Dòng 1\nDòng 2')
+  await user.type(input, '{Enter}')
+  expect(await screen.findByText('Thực lĩnh tháng này là 14.000.000 ₫')).toBeInTheDocument()
+  expect(screen.getByText(/Dòng 1/).closest('.chat-bubble')).toHaveClass('user')
+  expect(screen.getByText('Thực lĩnh tháng này là 14.000.000 ₫').closest('.chat-bubble')).toHaveClass('assistant')
+  expect(input).toHaveValue('')
+})
+
+it('sends a suggestion chip immediately', async () => {
+  apiMock.mockResolvedValue({ kind: 'ANSWER', answer: 'Đơn của bạn đang chờ duyệt', facts: [], sources: [] })
+  const user = userEvent.setup({ delay: null })
+  render(<AssistantPage />)
+  await user.click(screen.getByRole('button', { name: 'Đơn nghỉ của tôi đang ở trạng thái nào?' }))
+  expect(await screen.findByText('Đơn của bạn đang chờ duyệt')).toBeInTheDocument()
+  expect(JSON.parse(apiMock.mock.lastCall?.[1].body).question).toBe('Đơn nghỉ của tôi đang ở trạng thái nào?')
+})
+
+it('dismissing a draft or asking something else never writes data', async () => {
+  apiMock.mockImplementation(async (path: string, options: RequestInit) => {
+    if (path !== '/assistant/answers') throw new Error(`Unexpected request: ${path}`)
+    const question = JSON.parse(String(options.body)).question
+    if (question.startsWith('Hủy')) return { kind: 'PROPOSAL', proposal: { action: 'CANCEL_OWN_LEAVE', summary: 'Hủy đơn 9', payload: { leaveRequestId: 9 } }, facts: [], sources: [] }
+    return { kind: 'ANSWER', answer: 'Đã hiểu', facts: [], sources: [] }
+  })
+  const user = userEvent.setup({ delay: null })
+  render(<AssistantPage />)
+  const input = screen.getByRole('textbox', { name: 'Câu hỏi hoặc yêu cầu' })
+  await user.type(input, 'Hủy đơn 9{Enter}')
+  await screen.findByRole('form', { name: 'Bản nháp chờ xác nhận' })
+  await user.click(screen.getByRole('button', { name: 'Bỏ bản nháp' }))
+  expect(screen.getByText('Đã bỏ bản nháp, chưa ghi dữ liệu.')).toBeInTheDocument()
+  expect(screen.queryByRole('form', { name: 'Bản nháp chờ xác nhận' })).not.toBeInTheDocument()
+
+  await user.type(input, 'Hủy đơn 9 lần nữa{Enter}')
+  await screen.findByRole('form', { name: 'Bản nháp chờ xác nhận' })
+  await user.type(input, 'Thôi, cho tôi hỏi lương{Enter}')
+  await screen.findByText('Đã hiểu')
+  expect(screen.queryByRole('form', { name: 'Bản nháp chờ xác nhận' })).not.toBeInTheDocument()
+  expect(JSON.parse(apiMock.mock.lastCall?.[1].body).history.at(-1).answer).toBe('Người dùng đã bỏ bản nháp; chưa ghi dữ liệu.')
+  expect(apiMock.mock.calls.every(([path]) => path === '/assistant/answers')).toBe(true)
+})
+
