@@ -1,0 +1,39 @@
+%% Diagram: DFD Mức 2 - Tiến trình 2.0 Quản lý tổ chức & Nhân sự
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#0e5b62', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#0b454b', 'lineColor': '#94a3b8', 'secondaryColor': '#d9f1e8', 'tertiaryColor': '#f4a261', 'background': '#ffffff', 'mainBkg': '#f8fafc', 'nodeBorder': '#cbd5e1', 'clusterBkg': '#f1f5f9', 'clusterBorder': '#e2e8f0', 'titleColor': '#18343b', 'edgeLabelBackground': '#ffffff', 'textColor': '#334155'}}}%%
+flowchart TD
+    hr["HR Manager"]
+    emp["Nhân viên"]
+
+    subgraph p2_box["2.0 QUẢN LÝ TỔ CHỨC & HỒ SƠ NHÂN SỰ"]
+        p21(("2.1 Quản lý cơ cấu phòng ban & chức vụ"))
+        p22(("2.2 Tiếp nhận & Quản lý hồ sơ nhân viên"))
+        p23(("2.3 Quản lý hợp đồng & Đội nhóm làm việc"))
+        p24(("2.4 Tự cập nhật liên lạc cá nhân"))
+    end
+
+    d21[("departments & positions")]
+    d22[("employees")]
+    d23[("employment_contracts & teams")]
+
+    hr -->|"Thông tin phòng ban, chức danh mới"| p21
+    p21 <-->|"Ghi/đọc cơ cấu tổ chức"| d21
+
+    hr -->|"Hồ sơ nhân viên mới, điều chỉnh, nghỉ việc"| p22
+    p22 <-->|"Tra cứu phòng ban/chức vụ"| d21
+    p22 <-->|"Lưu thông tin nhân sự (Trạng thái ACTIVE/INACTIVE)"| d22
+
+    hr -->|"Ký hợp đồng, phụ cấp, phân nhóm"| p23
+    p23 <-->|"Liên kết mã nhân viên"| d22
+    p23 <-->|"Lưu hợp đồng & phân bổ nhóm"| d23
+
+    emp -->|"SĐT, Email cá nhân (PATCH /employees/me)"| p24
+    p24 <-->|"Cập nhật thông tin liên lạc"| d22
+    p24 -->|"Thông báo thành công"| emp
+
+    classDef actorNode fill:#ffffff,stroke:#64748b,stroke-width:1.5px,color:#0f172a;
+    classDef processNode fill:#0e5b62,stroke:#0b454b,color:#ffffff;
+    classDef storeNode fill:#e6f4ea,stroke:#137333,color:#137333;
+
+    class hr,emp actorNode;
+    class p21,p22,p23,p24 processNode;
+    class d21,d22,d23 storeNode;

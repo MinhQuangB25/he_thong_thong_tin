@@ -23,7 +23,4 @@ public class OrganizationController {
     @PostMapping("/positions")
     @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
     public OrganizationDtos.PositionResponse createPosition(@Valid @RequestBody OrganizationDtos.PositionRequest request) { return service.createPosition(request); }
-    @PostMapping("/contracts")
-    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
-    public OrganizationDtos.ContractResponse createContract(@Valid @RequestBody OrganizationDtos.ContractRequest request) { return service.createContract(request); }
 }

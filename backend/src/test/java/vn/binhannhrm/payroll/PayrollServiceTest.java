@@ -67,6 +67,56 @@ class PayrollServiceTest {
         return employee;
     }
 
+    @Test
+    void generationIgnoresLegacyOvertimeOnAbsentAndLeaveDays() {
+        var employee = employee(1L, "Regression");
+        var period = new PayrollPeriod(9, 2026, LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 30));
+        period.setId(10L);
+        var contract = new EmploymentContract(employee, "TEST-OT", "Permanent", LocalDate.of(2025, 1, 1), new BigDecimal("26000000"), new BigDecimal("500000"));
+        var present = new AttendanceRecord(employee, period.getFromDate(), AttendanceStatus.PRESENT);
+        present.setOvertimeHours(new BigDecimal("2"));
+        var absent = new AttendanceRecord(employee, period.getFromDate().plusDays(1), AttendanceStatus.ABSENT);
+        absent.setOvertimeHours(new BigDecimal("3"));
+        var leave = new AttendanceRecord(employee, period.getFromDate().plusDays(2), AttendanceStatus.LEAVE);
+        leave.setOvertimeHours(new BigDecimal("4"));
+        when(periods.findById(10L)).thenReturn(java.util.Optional.of(period));
+        when(settings.findTopByOrderByEffectiveFromDesc()).thenReturn(java.util.Optional.of(new SalarySettings(26, new BigDecimal("1.5"), LocalDate.of(2025, 1, 1))));
+        when(employees.findAll()).thenReturn(List.of(employee));
+        when(contracts.findByEmployeeIdOrderByStartDateDesc(1L)).thenReturn(List.of(contract));
+        when(attendance.findByEmployeeIdAndAttendanceDateBetweenOrderByAttendanceDate(1L, period.getFromDate(), period.getToDate())).thenReturn(List.of(present, absent, leave));
+        service = new PayrollService(periods, payrolls, employees, contracts, attendance, settings, new PayrollCalculator(), audit);
+        service.generate(10L);
+        var saved = org.mockito.ArgumentCaptor.forClass(Payroll.class);
+        org.mockito.Mockito.verify(payrolls).save(saved.capture());
+        assertEquals(new BigDecimal("2"), saved.getValue().getOvertimeHours());
+        assertEquals(new BigDecimal("1875000.00"), saved.getValue().getNetSalary());
+    }
+
+    @Test
+    void generationIgnoresContractsThatStartAfterThePeriod() {
+        var employee = employee(1L, "Raise next month");
+        var period = new PayrollPeriod(9, 2026, LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 30));
+        period.setId(11L);
+        var raise = new EmploymentContract(employee, "TEST-RAISE", "Permanent", LocalDate.of(2026, 10, 1), new BigDecimal("39000000"), new BigDecimal("900000"));
+        var current = new EmploymentContract(employee, "TEST-CURRENT", "Permanent", LocalDate.of(2025, 1, 1), new BigDecimal("26000000"), new BigDecimal("500000"));
+        current.setEndDate(LocalDate.of(2026, 9, 30));
+        when(periods.findById(11L)).thenReturn(java.util.Optional.of(period));
+        when(settings.findTopByOrderByEffectiveFromDesc()).thenReturn(java.util.Optional.of(new SalarySettings(26, new BigDecimal("1.5"), LocalDate.of(2025, 1, 1))));
+        when(employees.findAll()).thenReturn(List.of(employee));
+        var ended = new EmploymentContract(employee, "TEST-ENDED", "Permanent", LocalDate.of(2024, 1, 1), new BigDecimal("99000000"), BigDecimal.ZERO);
+        ended.setEndDate(LocalDate.of(2024, 12, 31));
+        when(contracts.findByEmployeeIdOrderByStartDateDesc(1L)).thenReturn(List.of(raise, current, ended));
+        when(attendance.findByEmployeeIdAndAttendanceDateBetweenOrderByAttendanceDate(1L, period.getFromDate(), period.getToDate())).thenReturn(List.of());
+        service = new PayrollService(periods, payrolls, employees, contracts, attendance, settings, new PayrollCalculator(), audit);
+
+        service.generate(11L);
+
+        var saved = org.mockito.ArgumentCaptor.forClass(Payroll.class);
+        org.mockito.Mockito.verify(payrolls).save(saved.capture());
+        assertEquals(new BigDecimal("26000000"), saved.getValue().getBaseSalary());
+        assertEquals(new BigDecimal("500000"), saved.getValue().getAllowances());
+    }
+
     private static Payroll payroll(Long id, Employee employee, int month, int year, String netSalary) {
         PayrollPeriod period = new PayrollPeriod(month, year, LocalDate.of(year, month, 1), LocalDate.of(year, month, 1).plusMonths(1).minusDays(1));
         period.setId(id);

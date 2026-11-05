@@ -24,14 +24,17 @@ public class LeaveController {
     }
     @GetMapping("/leave-requests")
     @PreAuthorize("isAuthenticated()")
-    public PageResponse<LeaveDtos.LeaveResponse> list(@AuthenticationPrincipal AppUserPrincipal principal, Pageable pageable) {
+    public PageResponse<LeaveDtos.LeaveResponse> list(@AuthenticationPrincipal AppUserPrincipal principal,
+            @RequestParam(required = false) vn.binhannhrm.domain.LeaveStatus status, Pageable pageable) {
         boolean all = principal.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_HR_MANAGER"));
-        return PageResponse.from(service.list(employeeIdOrNull(principal), all, pageable));
+        pageable = vn.binhannhrm.common.PageableValidation.validate(pageable,
+                java.util.Map.of("id", "id", "submittedAt", "submittedAt", "fromDate", "fromDate", "status", "status"));
+        return PageResponse.from(service.list(employeeIdOrNull(principal), all, status, pageable));
     }
     @PatchMapping("/leave-requests/{id}/review")
     @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
     public LeaveDtos.LeaveResponse review(@AuthenticationPrincipal AppUserPrincipal principal, @PathVariable Long id, @Valid @RequestBody LeaveDtos.ReviewLeaveRequest request) {
-        return service.review(employeeId(principal), id, request);
+        return service.review(employeeIdOrNull(principal), id, request);
     }
     @PatchMapping("/leave-requests/{id}/cancel")
     @PreAuthorize("isAuthenticated()")

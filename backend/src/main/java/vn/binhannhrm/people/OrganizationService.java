@@ -3,11 +3,9 @@ package vn.binhannhrm.people;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.binhannhrm.common.ConflictException;
-import vn.binhannhrm.common.ResourceNotFoundException;
 import vn.binhannhrm.domain.Department;
 import vn.binhannhrm.domain.DepartmentRepository;
 import vn.binhannhrm.domain.EmployeeRepository;
-import vn.binhannhrm.domain.EmploymentContract;
 import vn.binhannhrm.domain.EmploymentContractRepository;
 import vn.binhannhrm.domain.Position;
 import vn.binhannhrm.domain.PositionRepository;
@@ -37,13 +35,5 @@ public class OrganizationService {
     public OrganizationDtos.PositionResponse createPosition(OrganizationDtos.PositionRequest request) {
         if (positions.existsByTitleIgnoreCase(request.title())) throw new ConflictException("Chức vụ đã tồn tại");
         return OrganizationDtos.PositionResponse.from(positions.save(new Position(request.title(), request.defaultAllowance())));
-    }
-    @Transactional
-    public OrganizationDtos.ContractResponse createContract(OrganizationDtos.ContractRequest request) {
-        if (contracts.existsByContractNumber(request.contractNumber())) throw new ConflictException("Số hợp đồng đã tồn tại");
-        var employee = employees.findById(request.employeeId()).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy nhân viên"));
-        var contract = new EmploymentContract(employee, request.contractNumber(), request.contractType(), request.startDate(), request.baseSalary(), request.allowance());
-        contract.setEndDate(request.endDate());
-        return OrganizationDtos.ContractResponse.from(contracts.save(contract));
     }
 }

@@ -3,5 +3,6 @@ import { createRoot } from 'react-dom/client'
 import App from './App'
 import { AuthProvider } from './context/AuthContext'
 import './styles.css'
+import './redesign.css'
 
 createRoot(document.getElementById('root')!).render(<StrictMode><AuthProvider><App /></AuthProvider></StrictMode>)

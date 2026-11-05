@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({AuthorizationDeniedException.class, AccessDeniedException.class})
-    ResponseEntity<ApiError> denied(AuthorizationDeniedException exception, HttpServletRequest request) {
+    ResponseEntity<ApiError> denied(AccessDeniedException exception, HttpServletRequest request) {
         return response(HttpStatus.FORBIDDEN, "FORBIDDEN", "Bạn không có quyền thực hiện thao tác này", null);
     }
 
@@ -46,6 +46,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConflictException.class)
     ResponseEntity<ApiError> conflict(ConflictException exception, HttpServletRequest request) {
         return response(HttpStatus.CONFLICT, "CONFLICT", exception.getMessage(), null);
+    }
+
+    @ExceptionHandler(vn.binhannhrm.assistant.AssistantUnavailableException.class)
+    ResponseEntity<ApiError> assistantUnavailable(vn.binhannhrm.assistant.AssistantUnavailableException exception) {
+        return response(HttpStatus.SERVICE_UNAVAILABLE, "AI_UNAVAILABLE", exception.getMessage(), null);
+    }
+
+    @ExceptionHandler({org.springframework.web.bind.MissingServletRequestParameterException.class,
+            org.springframework.web.method.annotation.MethodArgumentTypeMismatchException.class,
+            org.springframework.http.converter.HttpMessageNotReadableException.class,
+            BadRequestException.class})
+    ResponseEntity<ApiError> badRequest(Exception exception) {
+        return response(HttpStatus.BAD_REQUEST, "INVALID_REQUEST", "Tham số yêu cầu không hợp lệ", null);
     }
 
     @ExceptionHandler(Exception.class)

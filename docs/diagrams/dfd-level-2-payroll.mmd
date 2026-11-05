@@ -1,0 +1,45 @@
+%% Diagram: DFD Mức 2 - Tiến trình 5.0 Tính lương & Chi trả
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#0e5b62', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#0b454b', 'lineColor': '#94a3b8', 'secondaryColor': '#d9f1e8', 'tertiaryColor': '#f4a261', 'background': '#ffffff', 'mainBkg': '#f8fafc', 'nodeBorder': '#cbd5e1', 'clusterBkg': '#f1f5f9', 'clusterBorder': '#e2e8f0', 'titleColor': '#18343b', 'edgeLabelBackground': '#ffffff', 'textColor': '#334155'}}}%%
+flowchart TD
+    hr["HR Manager"]
+    emp["Nhân viên"]
+
+    subgraph p5_box["5.0 TÍNH LƯƠNG & CHI TRẢ"]
+        p51(("5.1 Khởi tạo kỳ lương & Thu thập dữ liệu"))
+        p52(("5.2 Tự động tính toán bảng lương chi tiết"))
+        p53(("5.3 Khóa kỳ lương & Phát hành phiếu lương"))
+    end
+
+    d51[("salary_settings")]
+    d52[("payroll_periods")]
+    d53[("payrolls & payroll_items")]
+    d23[("employment_contracts")]
+    d32[("leave_requests")]
+    d43[("attendance_records")]
+
+    hr -->|"Chọn tháng, năm kỳ lương mới"| p51
+    p51 -->|"Tạo kỳ lương trạng thái DRAFT"| d52
+    p51 <-->|"Lấy định mức ngày công chuẩn"| d51
+
+    hr -->|"Yêu cầu tính lương (POST /generate)"| p52
+    d52 -->|"Thông tin kỳ lương đang DRAFT"| p52
+    d23 -->|"Lương cơ bản & Các khoản phụ cấp"| p52
+    d43 -->|"Tổng ngày công thực tế & Giờ tăng ca"| p52
+    d32 -->|"Số ngày nghỉ phép hưởng lương / không lương"| p52
+    p52 -->|"Tính lương OT, Khấu trừ, Lương thực lĩnh"| d53
+    p52 -->|"Ghi chi tiết từng khoản mục payroll_items"| d53
+    d53 -->|"Xem trước bảng lương nháp"| hr
+
+    hr -->|"Xác nhận & Khóa kỳ lương (PATCH /lock)"| p53
+    p53 -->|"Đổi trạng thái kỳ lương thành LOCKED"| d52
+    p53 -->|"Khóa chỉnh sửa toàn bộ bản ghi lương"| d53
+    d53 -->|"Tra cứu & In phiếu lương cá nhân (Payslip)"| emp
+    d53 -->|"In bảng lương tháng / Báo cáo quỹ lương"| hr
+
+    classDef actorNode fill:#ffffff,stroke:#64748b,stroke-width:1.5px,color:#0f172a;
+    classDef processNode fill:#0e5b62,stroke:#0b454b,color:#ffffff;
+    classDef storeNode fill:#e6f4ea,stroke:#137333,color:#137333;
+
+    class hr,emp actorNode;
+    class p51,p52,p53 processNode;
+    class d51,d52,d53,d23,d32,d43 storeNode;

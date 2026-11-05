@@ -82,7 +82,11 @@ public class DemoDataSeeder {
         return repository.findByEmployeeCode(code).orElseGet(() -> { Employee employee = new Employee(code, name, gender, phone, email, LocalDate.now().minusMonths(6), department, position); employee.setEducationLevel(education); return repository.save(employee); });
     }
     private void contract(EmploymentContractRepository repository, Employee employee, String number, BigDecimal salary, BigDecimal allowance) {
-        if (!repository.existsByContractNumber(number)) repository.save(new EmploymentContract(employee, number, "Không xác định thời hạn", employee.getJoinDate(), salary, allowance));
+        if (repository.existsByContractNumber(number)) return;
+        EmploymentContract contract = new EmploymentContract(employee, number, "Không xác định thời hạn", employee.getJoinDate(), salary, allowance);
+        // A seeded former employee gets a closed contract, matching what "Cho nghỉ việc" does at runtime.
+        if (employee.getStatus() == EmployeeStatus.TERMINATED) { contract.setStatus(vn.binhannhrm.domain.ContractStatus.TERMINATED); contract.setEndDate(employee.getEndDate()); }
+        repository.save(contract);
     }
     private void seedUser(AppUserRepository users, RoleRepository roles, PasswordEncoder encoder, String username, String displayName, RoleCode roleCode, Employee employee) {
         AppUser user = users.findByUsername(username).orElseGet(() -> new AppUser(username, encoder.encode("password"), displayName)); user.addRole(roles.findByCode(roleCode).orElseThrow()); if (employee != null) user.setEmployee(employee); users.save(user);
