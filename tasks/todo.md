@@ -16,7 +16,7 @@
 - [x] Thêm tên và mã nhân viên vào bản in lương năm, kể cả khi tháng đang chọn không có bảng lương.
 - [x] Chạy backup/restore trên bản sao an toàn và ghi bằng chứng trong `docs/testing/backup-restore-2026-10-14.md`: full dump hash giống nhau, backend tạm và bốn role đạt; không thay đổi CSDL gốc.
 - [x] Đo coverage thực tế bằng JaCoCo/Vitest V8, xem `docs/testing/coverage-2026-10-14.md`; giữ nguyên ngưỡng trong `CONSTRAINTS.md`.
-- [ ] Bổ sung test để nhóm service/calculator đạt 80% dòng (baseline 75,16%); tăng kiểm thử nhánh và các phần thiếu test, không chỉ tối ưu con số tổng.
+- [x] Nhóm service/calculator đạt 89,90% dòng, 73,15% nhánh (06/11/2026; baseline 75,16% / 43,73%) bằng test quy tắc nghiệp vụ chấm công, phân quyền nhóm, duyệt/hủy đơn, kỳ lương, an toàn tài khoản Admin; xem `docs/testing/coverage-2026-11-06.md`.
 - [ ] Cập nhật bản vá source-map-js 1.2.2, xác nhận Node tương thích và chạy lại audit/test/build trước phát hành.
 - [ ] Rà soát dữ liệu demo và các fixture kiểm thử trước khi chốt bản nộp.
 - [ ] Hoàn thiện báo cáo, bảng phân công 15 tuần, đóng góp thành viên và luyện demo.
@@ -63,7 +63,7 @@ Runtime note: Docker Compose cần Docker Desktop đang chạy trước khi dùn
 - [x] Test backend: 4 unit test service + 5 test tích hợp (401, 403 EMPLOYEE/TEAM_LEADER, 400, 409, 404, 200 + audit). `mvn verify`: 56 test đạt.
 - [x] Frontend: nút "Sửa" cho nhân sự đang làm, form dùng chung với Thêm, mã NV chỉ đọc, thông báo thành công; 55/55 test, typecheck/build đạt.
 - [x] Chrome: sửa thật phòng ban/trình độ bằng `hr.manager`, audit hiện trên trang Admin; 1440/1024/320px không cuộn ngang trang, console sạch.
-- [ ] Còn lại: thay đổi lương qua màn hình hợp đồng (chưa có UI hợp đồng); chọn quản lý trực tiếp chưa có trong form.
+- [ ] Còn lại: chọn quản lý trực tiếp chưa có trong form (thay đổi lương đã làm qua màn hình Hợp đồng).
 
 # Màn hình hợp đồng — 05/11/2026
 
