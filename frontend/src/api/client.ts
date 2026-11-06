@@ -11,7 +11,13 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
   const response = await fetch(`${API_URL}${path}`, { ...options, headers })
   if (!response.ok) {
     let message = `Yêu cầu thất bại (${response.status})`
-    try { const body = await response.json(); message = body.message ?? message } catch { /* empty response */ }
+    try {
+      const body = await response.json()
+      message = body.message ?? message
+      // Validation errors carry per-field messages; show them so forms can tell the user what to fix.
+      const details = body.details && typeof body.details === 'object' ? Object.values(body.details as Record<string, unknown>).filter(value => typeof value === 'string') : []
+      if (details.length) message = `${message}: ${details.join('; ')}`
+    } catch { /* empty response */ }
     throw new Error(message)
   }
   if (response.status === 204) return undefined as T

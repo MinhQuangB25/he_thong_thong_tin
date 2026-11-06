@@ -52,6 +52,7 @@ public class AttendanceService {
         var employee = employees.findById(input.employeeId()).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy nhân viên"));
         WorkSchedule schedule = input.scheduleId() == null ? null : schedules.findById(input.scheduleId()).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy lịch làm"));
         if (schedule != null && !schedule.getEmployee().getId().equals(employee.getId())) throw new ConflictException("Lịch làm không thuộc nhân viên");
+        if (schedule != null && !schedule.getWorkDate().equals(input.attendanceDate())) throw new ConflictException("Ngày chấm công phải trùng ngày của lịch làm");
         var record = new AttendanceRecord(employee, input.attendanceDate(), status);
         record.setSchedule(schedule); record.setCheckIn(input.checkIn()); record.setCheckOut(input.checkOut());
         calculateHours(record, schedule);
@@ -71,6 +72,14 @@ public class AttendanceService {
         return result.stream().map(AttendanceDtos.AttendanceResponse::from).toList();
     }
     private void calculateHours(AttendanceRecord record, WorkSchedule schedule) {
+        if (record.getStatus() == AttendanceStatus.ABSENT || record.getStatus() == AttendanceStatus.LEAVE) {
+            record.setWorkedHours(BigDecimal.ZERO);
+            record.setOvertimeHours(BigDecimal.ZERO);
+            record.setCheckIn(null);
+            record.setCheckOut(null);
+            return;
+        }
+        if ((record.getCheckIn() == null) != (record.getCheckOut() == null)) throw new ConflictException("Cần nhập cả giờ vào và giờ ra");
         if (record.getCheckIn() == null || record.getCheckOut() == null) return;
         long minutes = Duration.between(record.getCheckIn(), record.getCheckOut()).toMinutes();
         if (minutes < 0) throw new ConflictException("Giờ ra phải sau giờ vào");

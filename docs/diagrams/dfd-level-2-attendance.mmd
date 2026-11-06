@@ -1,0 +1,43 @@
+%% Diagram: DFD Mức 2 - Tiến trình 4.0 Quản lý ca làm & Chấm công
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#0e5b62', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#0b454b', 'lineColor': '#94a3b8', 'secondaryColor': '#d9f1e8', 'tertiaryColor': '#f4a261', 'background': '#ffffff', 'mainBkg': '#f8fafc', 'nodeBorder': '#cbd5e1', 'clusterBkg': '#f1f5f9', 'clusterBorder': '#e2e8f0', 'titleColor': '#18343b', 'edgeLabelBackground': '#ffffff', 'textColor': '#334155'}}}%%
+flowchart TD
+    hr["HR Manager"]
+    emp["Nhân viên"]
+    leader["Trưởng nhóm"]
+
+    subgraph p4_box["4.0 QUẢN LÝ CA LÀM & CHẤM CÔNG"]
+        p41(("4.1 Thiết lập ca & Phân lịch làm việc"))
+        p42(("4.2 Ghi nhận Check-in / Check-out"))
+        p43(("4.3 Tổng hợp giờ công & Giờ làm thêm OT"))
+    end
+
+    d41[("work_shifts")]
+    d42[("work_schedules")]
+    d43[("attendance_records")]
+    d22[("employees")]
+
+    hr -->|"Thiết lập khung giờ ca, hệ số OT"| p41
+    p41 <-->|"Lưu danh mục ca làm"| d41
+    hr -->|"Phân lịch làm việc theo ngày cho nhân viên"| p41
+    p41 <-->|"Đối chiếu mã nhân viên"| d22
+    p41 -->|"Lưu lịch làm việc (Work Schedules)"| d42
+
+    emp -->|"Check-in / Check-out (Thời gian quẹt thẻ)"| p42
+    p42 <-->|"Đối chiếu lịch đã xếp trong ngày"| d42
+    p42 -->|"Ghi nhận thời gian vào/ra thực tế"| d43
+    p42 -->|"Xác nhận ghi nhận chấm công"| emp
+
+    d43 -->|"Dữ liệu vào/ra thực tế"| p43
+    d41 -->|"Khung giờ chuẩn của ca"| p43
+    p43 -->|"Tính giờ làm việc chuẩn & Giờ làm thêm"| d43
+    p43 -->|"Gán trạng thái: PRESENT / LATE / EARLY_LEAVE"| d43
+    d43 -->|"Bảng công nhóm phụ trách"| leader
+    d43 -->|"Bảng công tổng hợp toàn đơn vị"| hr
+
+    classDef actorNode fill:#ffffff,stroke:#64748b,stroke-width:1.5px,color:#0f172a;
+    classDef processNode fill:#0e5b62,stroke:#0b454b,color:#ffffff;
+    classDef storeNode fill:#e6f4ea,stroke:#137333,color:#137333;
+
+    class hr,emp,leader actorNode;
+    class p41,p42,p43 processNode;
+    class d41,d42,d43,d22 storeNode;

@@ -54,6 +54,7 @@ function mockPayrollApi(status = 'LOCKED') {
       return [{ ...payroll, status } satisfies Payroll]
     }
     if (url.pathname === '/payrolls/annual-summary' && url.searchParams.get('year') === '2026') return annualSummary
+    if (url.pathname === '/employees/me') return { fullName: 'Nguyễn Minh Anh', employeeCode: 'BA-EMP-001' }
     if (url.pathname === '/payrolls/calculation-rule') return calculationRule
     throw new Error(`Unexpected employee API request: ${path}`)
   })
@@ -80,12 +81,13 @@ afterEach(() => {
 })
 
 describe('F14: employee payroll status', () => {
-  it.each(['DRAFT', 'LOCKED'])('shows the existing payroll status %s instead of CHƯA TẠO', async status => {
+  it.each([['DRAFT', 'Bản nháp'], ['LOCKED', 'Đã khóa']])('shows the existing payroll status %s instead of CHƯA TẠO', async (status, label) => {
     mockPayrollApi(status)
     await renderLoadedPayroll()
 
     const statusCard = screen.getByText('TRẠNG THÁI KỲ').closest('div')
-    expect(statusCard).toHaveTextContent(status)
+    expect(statusCard).toHaveTextContent(label)
+    expect(statusCard).not.toHaveTextContent(status)
     expect(statusCard).not.toHaveTextContent('CHƯA TẠO')
   })
 })

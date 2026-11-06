@@ -9,11 +9,12 @@ import org.springframework.data.repository.query.Param;
 import java.util.Collection;
 import java.util.Optional;
 
-public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+public interface EmployeeRepository extends JpaRepository<Employee, Long>, org.springframework.data.jpa.repository.JpaSpecificationExecutor<Employee> {
     Optional<Employee> findByEmployeeCode(String employeeCode);
     Optional<Employee> findByEmailIgnoreCase(String email);
     boolean existsByEmailIgnoreCase(String email);
     boolean existsByNationalId(String nationalId);
+    Optional<Employee> findByNationalId(String nationalId);
     Page<Employee> findByFullNameContainingIgnoreCaseOrEmployeeCodeContainingIgnoreCase(String fullName, String employeeCode, Pageable pageable);
     Page<Employee> findByIdIn(Collection<Long> ids, Pageable pageable);
 

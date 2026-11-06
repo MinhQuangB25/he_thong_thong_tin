@@ -66,6 +66,7 @@ INSERT IGNORE INTO employees (id, employee_code, full_name, gender, phone, email
 INSERT IGNORE INTO employment_contracts (id, employee_id, contract_number, contract_type, start_date, base_salary, allowance, status) VALUES
  (4, 4, 'HD-BA-004', 'Không xác định thời hạn', DATE_SUB(CURDATE(), INTERVAL 50 MONTH), 11000000, 300000, 'ACTIVE'),
  (5, 5, 'HD-BA-005', 'Không xác định thời hạn', DATE_SUB(CURDATE(), INTERVAL 5 YEAR), 16000000, 700000, 'TERMINATED');
+UPDATE employment_contracts SET end_date = DATE_SUB(CURDATE(), INTERVAL 2 MONTH) WHERE id = 5 AND end_date IS NULL;
 INSERT IGNORE INTO leave_requests (id, employee_id, leave_type_id, from_date, to_date, reason, submitted_at, status, reviewer_id, reviewed_at)
  VALUES (2, 3, 1, DATE_SUB(CURDATE(), INTERVAL 2 DAY), LAST_DAY(CURDATE()), 'Nghỉ phép cá nhân - dữ liệu demo', NOW(), 'APPROVED', 1, NOW());
 INSERT IGNORE INTO work_schedules (id, employee_id, shift_id, work_date, status, note) VALUES

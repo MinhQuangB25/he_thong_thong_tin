@@ -10,13 +10,17 @@ vi.mock('../context/AuthContext', () => ({
 }))
 
 describe('AppShell admin workspace', () => {
-  it('shows only the separated admin navigation for an admin account', () => {
-    render(<AppShell screen="admin" onNavigate={vi.fn()}><div>Admin content</div></AppShell>)
+  it('keeps the admin workspace separate while exposing business navigation', () => {
+    const { container } = render(<AppShell screen="admin" onNavigate={vi.fn()}><div>Admin content</div></AppShell>)
 
     expect(screen.getByRole('button', { name: 'Quản trị hệ thống' })).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'Nhân sự' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'Đơn từ' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'Chấm công' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'Bảng lương' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Nhân sự' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Đơn từ' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Chấm công' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Bảng lương' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Báo cáo' })).toBeInTheDocument()
+    expect(container.querySelector('.admin-shell')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Tổng quan' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Hồ sơ cá nhân' })).not.toBeInTheDocument()
   })
 })

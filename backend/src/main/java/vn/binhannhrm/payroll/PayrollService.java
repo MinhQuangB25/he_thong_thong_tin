@@ -41,12 +41,18 @@ public class PayrollService {
         var salary = settings.findTopByOrderByEffectiveFromDesc().orElseThrow(() -> new ResourceNotFoundException("Chưa cấu hình ngày công chuẩn"));
         for (Employee employee : employees.findAll()) {
             if (employee.getStatus() == EmployeeStatus.TERMINATED) continue;
-            var employeeContracts = contracts.findByEmployeeIdOrderByStartDateDesc(employee.getId());
-            if (employeeContracts.isEmpty()) continue;
-            var contract = employeeContracts.get(0);
+            // Use the newest contract in force during the period: a raise signed for a later month must not leak in,
+            // and a contract that ended before the period must not keep paying.
+            var contract = contracts.findByEmployeeIdOrderByStartDateDesc(employee.getId()).stream()
+                    .filter(candidate -> !candidate.getStartDate().isAfter(period.getToDate()))
+                    .filter(candidate -> candidate.getEndDate() == null || !candidate.getEndDate().isBefore(period.getFromDate()))
+                    .findFirst().orElse(null);
+            if (contract == null) continue;
             var records = attendance.findByEmployeeIdAndAttendanceDateBetweenOrderByAttendanceDate(employee.getId(), period.getFromDate(), period.getToDate());
             BigDecimal workedDays = BigDecimal.valueOf(records.stream().filter(r -> r.getStatus() == AttendanceStatus.PRESENT || r.getStatus() == AttendanceStatus.LATE).count());
-            BigDecimal overtimeHours = records.stream().map(AttendanceRecord::getOvertimeHours).reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal overtimeHours = records.stream()
+                    .filter(r -> r.getStatus() == AttendanceStatus.PRESENT || r.getStatus() == AttendanceStatus.LATE)
+                    .map(AttendanceRecord::getOvertimeHours).reduce(BigDecimal.ZERO, BigDecimal::add);
             var result = calculator.calculate(new PayrollCalculator.Input(contract.getBaseSalary(), workedDays, overtimeHours, salary.getOvertimeMultiplier(), contract.getAllowance(), BigDecimal.ZERO, salary.getStandardWorkDays()));
             Payroll payroll = payrolls.findByPeriodIdAndEmployeeId(periodId, employee.getId()).orElseGet(() -> new Payroll(period, employee));
             payroll.setBaseSalary(contract.getBaseSalary()); payroll.setWorkedDays(workedDays); payroll.setOvertimeHours(overtimeHours);
@@ -68,7 +74,7 @@ public class PayrollService {
         return periods.findAll().stream()
                 .filter(period -> month == null || period.getMonth() == month)
                 .filter(period -> year == null || period.getYear() == year)
-                .sorted(java.util.Comparator.comparing(PayrollPeriod::getYear).reversed().thenComparing(PayrollPeriod::getMonth).reversed())
+                .sorted(java.util.Comparator.comparing(PayrollPeriod::getYear).thenComparing(PayrollPeriod::getMonth).reversed())
                 .map(PayrollDtos.PeriodResponse::from)
                 .toList();
     }

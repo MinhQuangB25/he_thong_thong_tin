@@ -126,7 +126,7 @@ try {
         await expectStatus('other employee cannot cancel','employee','PATCH',`/leave-requests/${leave.id}/cancel`,403)
         await expectStatus('employee cannot review','test','PATCH',`/leave-requests/${leave.id}/review`,403,{status:'APPROVED'})
         await expectStatus('Admin can review without employee link','admin','PATCH',`/leave-requests/${leave.id}/review`,200,{status:'APPROVED'})
-        await expectStatus('HR approves leave','hr','PATCH',`/leave-requests/${leave.id}/review`,200,{status:'APPROVED'})
+        await expectStatus('HR cannot approve already approved leave','hr','PATCH',`/leave-requests/${leave.id}/review`,409,{status:'APPROVED'})
         await expectStatus('cannot cancel approved leave','test','PATCH',`/leave-requests/${leave.id}/cancel`,409)
         await expectStatus('cannot review twice','hr','PATCH',`/leave-requests/${leave.id}/review`,409,{status:'REJECTED'})
       } else if(i===1) await expectStatus('HR rejects leave','hr','PATCH',`/leave-requests/${leave.id}/review`,200,{status:'REJECTED',rejectionReason:prefix})
@@ -184,3 +184,4 @@ await mkdir(root,{recursive:true})
 const evidence={run,createdAt:new Date().toISOString(),results,fixtures}
 await writeFile(new URL(`api-audit-${run}.json`,root),JSON.stringify(evidence,null,2))
 console.log(JSON.stringify({run,total:results.length,passed:results.filter(r=>r.result==='PASS').length,failed:results.filter(r=>r.result==='FAIL').length,fixtures},null,2))
+process.exitCode = results.some(result => result.result === 'FAIL') ? 1 : 0
