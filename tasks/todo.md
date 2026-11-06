@@ -17,7 +17,7 @@
 - [x] Chạy backup/restore trên bản sao an toàn và ghi bằng chứng trong `docs/testing/backup-restore-2026-10-14.md`: full dump hash giống nhau, backend tạm và bốn role đạt; không thay đổi CSDL gốc.
 - [x] Đo coverage thực tế bằng JaCoCo/Vitest V8, xem `docs/testing/coverage-2026-10-14.md`; giữ nguyên ngưỡng trong `CONSTRAINTS.md`.
 - [x] Nhóm service/calculator đạt 89,90% dòng, 73,15% nhánh (06/11/2026; baseline 75,16% / 43,73%) bằng test quy tắc nghiệp vụ chấm công, phân quyền nhóm, duyệt/hủy đơn, kỳ lương, an toàn tài khoản Admin; xem `docs/testing/coverage-2026-11-06.md`.
-- [ ] Cập nhật bản vá source-map-js 1.2.2, xác nhận Node tương thích và chạy lại audit/test/build trước phát hành.
+- [x] `npm audit` 0 lỗi (06/11/2026): vá `source-map-js` 1.2.2 và các cảnh báo mới của `vite` (8.3.6), `undici`, `vitest`/`@vitest/coverage-v8` (5.1.0) bằng `npm audit fix --ignore-scripts` + nâng provider; test/build/coverage và Docker frontend đạt. Còn khuyến nghị nâng Node local 24.13 → ≥24.15 (engine jsdom).
 - [ ] Rà soát dữ liệu demo và các fixture kiểm thử trước khi chốt bản nộp.
 - [ ] Hoàn thiện báo cáo, bảng phân công 15 tuần, đóng góp thành viên và luyện demo.
 

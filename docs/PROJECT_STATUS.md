@@ -43,7 +43,7 @@ Bằng chứng chi tiết: `docs/testing/ket-qua-sua-loi-2026-09-23.md`.
 3. Các kỳ lương đã khóa và fixture kiểm thử cũ không được tự ý tính lại hoặc xóa nếu chưa sao lưu.
 4. Cần hoàn thiện báo cáo cuối, bảng đóng góp nhóm và luyện kịch bản thuyết trình.
 5. Cần chạy lại đầy đủ ba thao tác bản nháp trên Chrome sau khi model đã sẵn sàng.
-6. `npm audit --audit-level=high` chưa đạt: `source-map-js@1.2.1` có advisory high GHSA-68fv-2mgg-jv7q, bản vá 1.2.2. Cần cập nhật dependency và chạy lại test/build trước phát hành; chưa tự nâng package trong đợt đo coverage. Node local 24.13.0 thấp hơn engine yêu cầu của jsdom 30.1.0 đã có sẵn (24.15.0 hoặc nhánh tương thích).
+6. `npm audit` đạt **0 lỗi** (06/11/2026): nâng trong phạm vi semver, không đổi phiên bản lớn của gói trực tiếp — `vite` 8.3.0→8.3.6, `vitest` + `@vitest/coverage-v8` 5.0.1→5.1.0 (provider vẫn ghim cứng, cùng phiên bản vitest), transitive `source-map-js` 1.2.2, `undici` 8.12.4, `postcss` 8.5.32; không thêm gói mới. Test 72/72, typecheck/build, coverage giữ 82,47% dòng; Docker frontend build lại với Node 22.23 (đạt engine jsdom). Node local 24.13.0 vẫn thấp hơn engine jsdom (^24.15.0) — chỉ ảnh hưởng máy dev, nên nâng Node local khi tiện.
 
 ## 5. Quy tắc tiếp tục công việc
 
