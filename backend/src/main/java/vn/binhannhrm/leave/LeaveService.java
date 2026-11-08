@@ -51,10 +51,22 @@ public class LeaveService {
         catch (IllegalArgumentException ex) { throw new ConflictException("Trạng thái duyệt không hợp lệ"); }
         if (status != LeaveStatus.APPROVED && status != LeaveStatus.REJECTED) throw new ConflictException("Chỉ được duyệt hoặc từ chối đơn nghỉ");
         request.setStatus(status);
-        request.setReviewer(employees.findById(reviewerId).orElse(null));
+        request.setReviewer(reviewerId == null ? null : employees.findById(reviewerId).orElse(null));
         request.setReviewedAt(LocalDateTime.now());
         request.setRejectionReason(status == LeaveStatus.REJECTED ? input.rejectionReason() : null);
         LeaveRequest saved = requests.save(request); audit.record("LEAVE_REVIEWED", "leave_requests", saved.getId(), status.name()); return LeaveDtos.LeaveResponse.from(saved);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<LeaveDtos.LeaveResponse> list(Long employeeId, boolean all, LeaveStatus status, Pageable pageable) {
+        if (!all && employeeId == null) return Page.empty(pageable);
+        org.springframework.data.jpa.domain.Specification<LeaveRequest> filter = (root, query, cb) -> {
+            var predicates = new java.util.ArrayList<jakarta.persistence.criteria.Predicate>();
+            if (!all) predicates.add(cb.equal(root.get("employee").get("id"), employeeId));
+            if (status != null) predicates.add(cb.equal(root.get("status"), status));
+            return cb.and(predicates.toArray(jakarta.persistence.criteria.Predicate[]::new));
+        };
+        return requests.findAll(filter, pageable).map(LeaveDtos.LeaveResponse::from);
     }
     @Transactional
     public void cancel(Long employeeId, Long requestId) {

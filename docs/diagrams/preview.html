@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sơ đồ BFD và DFD 3 mức — Hệ thống HRM Bình An</title>
+  <style>
+    :root {
+      --primary: #0e5b62;
+      --primary-dark: #0b454b;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-muted: #64748b;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--border);
+    }
+    h1 {
+      color: var(--primary);
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+    .toc {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem 2rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .toc h2 {
+      font-size: 1.2rem;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+    }
+    .toc ul {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 0.5rem 1.5rem;
+      list-style-position: inside;
+    }
+    .toc a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .toc a:hover {
+      text-decoration: underline;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 3rem;
+      padding: 1.75rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      scroll-margin-top: 1.5rem;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-title {
+      font-size: 1.35rem;
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .badge {
+      display: inline-block;
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.25rem;
+    }
+    .img-wrapper {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem;
+      text-align: center;
+      overflow-x: auto;
+    }
+    .img-wrapper img {
+      max-width: 100%;
+      height: auto;
+      display: inline-block;
+    }
+    .actions {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.45rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+    .btn:hover {
+      background: var(--bg);
+      border-color: #cbd5e1;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary-dark);
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>BỘ SƠ ĐỒ BFD & DFD (MỨC 0, 1, 2)</h1>
+      <p class="subtitle">Hệ thống Quản lý Nhân sự (HRM) — Trung tâm Ngoại ngữ Bình An</p>
+    </header>
+
+    <div class="toc">
+      <h2>Mục lục sơ đồ</h2>
+      <ul>
+        <li><a href="#bfd">1. Sơ đồ phân rã chức năng (BFD)</a></li>
+        <li><a href="#dfd0">2. DFD Mức 0 (Sơ đồ ngữ cảnh)</a></li>
+        <li><a href="#dfd1">3. DFD Mức 1 (Sơ đồ mức đỉnh)</a></li>
+        <li><a href="#dfd2-people">4. DFD Mức 2 (Tiến trình 2.0 - Nhân sự)</a></li>
+        <li><a href="#dfd2-leave">5. DFD Mức 2 (Tiến trình 3.0 - Đơn từ)</a></li>
+        <li><a href="#dfd2-attendance">6. DFD Mức 2 (Tiến trình 4.0 - Chấm công)</a></li>
+        <li><a href="#dfd2-payroll">7. DFD Mức 2 (Tiến trình 5.0 - Tính lương)</a></li>
+      </ul>
+    </div>
+
+    <!-- 1. BFD -->
+    <div class="card" id="bfd">
+      <div class="card-header">
+        <h2 class="card-title">1. Sơ đồ phân rã chức năng (BFD)</h2>
+        <span class="badge">Kiến trúc chức năng</span>
+      </div>
+      <p class="card-desc">Phân rã toàn bộ nghiệp vụ HRM Bình An thành 6 phân hệ cốt lõi mức 1 và 20 chức năng thành phần mức 2.</p>
+      <div class="img-wrapper">
+        <img src="bfd.svg" alt="Sơ đồ BFD HRM Bình An">
+      </div>
+      <div class="actions">
+        <a class="btn" href="bfd.svg" target="_blank">Mở SVG</a>
+        <a class="btn btn-primary" href="bfd.png" download>Tải ảnh PNG (Độ nét cao)</a>
+      </div>
+    </div>
+
+    <!-- 2. DFD 0 -->
+    <div class="card" id="dfd0">
+      <div class="card-header">
+        <h2 class="card-title">2. DFD Mức 0 — Sơ đồ ngữ cảnh (Context Diagram)</h2>
+        <span class="badge">Mức 0</span>
+      </div>
+      <p class="card-desc">Mô tả ranh giới hệ thống và các luồng thông tin vào/ra với 4 tác nhân: Quản trị viên, HR Manager, Trưởng nhóm và Nhân viên.</p>
+      <div class="img-wrapper">
+        <img src="dfd-level-0.svg" alt="DFD Mức 0 Context Diagram">
+      </div>
+      <div class="actions">
+        <a class="btn" href="dfd-level-0.svg" target="_blank">Mở SVG</a>
+        <a class="btn btn-primary" href="dfd-level-0.png" download>Tải ảnh PNG (Độ nét cao)</a>
+      </div>
+    </div>
+
+    <!-- 3. DFD 1 -->
+    <div class="card" id="dfd1">
+      <div class="card-header">
+        <h2 class="card-title">3. DFD Mức 1 — Sơ đồ luồng dữ liệu mức đỉnh</h2>
+        <span class="badge">Mức 1</span>
+      </div>
+      <p class="card-desc">Phân rã tiến trình 0.0 thành 6 tiến trình chính (1.0 đến 6.0) cùng 5 kho dữ liệu trung tâm D1 đến D5.</p>
+      <div class="img-wrapper">
+        <img src="dfd-level-1.svg" alt="DFD Mức 1 Top Level">
+      </div>
+      <div class="actions">
+        <a class="btn" href="dfd-level-1.svg" target="_blank">Mở SVG</a>
+        <a class="btn btn-primary" href="dfd-level-1.png" download>Tải ảnh PNG (Độ nét cao)</a>
+      </div>
+    </div>
+
+    <!-- 4. DFD 2 People -->
+    <div class="card" id="dfd2-people">
+      <div class="card-header">
+        <h2 class="card-title">4. DFD Mức 2 — Phân rã Tiến trình 2.0: Quản lý tổ chức & Nhân sự</h2>
+        <span class="badge">Mức 2 (Chi tiết)</span>
+      </div>
+      <p class="card-desc">Chi tiết hóa các tiến trình con 2.1 (Phòng ban/chức vụ), 2.2 (Hồ sơ nhân viên), 2.3 (Hợp đồng lao động & Đội nhóm) và 2.4 (Cập nhật thông tin cá nhân).</p>
+      <div class="img-wrapper">
+        <img src="dfd-level-2-people.svg" alt="DFD Mức 2 Quản lý nhân sự">
+      </div>
+      <div class="actions">
+        <a class="btn" href="dfd-level-2-people.svg" target="_blank">Mở SVG</a>
+        <a class="btn btn-primary" href="dfd-level-2-people.png" download>Tải ảnh PNG (Độ nét cao)</a>
+      </div>
+    </div>
+
+    <!-- 5. DFD 2 Leave -->
+    <div class="card" id="dfd2-leave">
+      <div class="card-header">
+        <h2 class="card-title">5. DFD Mức 2 — Phân rã Tiến trình 3.0: Quản lý đơn từ & Nghỉ phép</h2>
+        <span class="badge">Mức 2 (Chi tiết)</span>
+      </div>
+      <p class="card-desc">Chi tiết hóa các tiến trình con 3.1 (Tiếp nhận & Kiểm tra đơn), 3.2 (Thẩm định & Phê duyệt / Từ chối) và 3.3 (Hủy đơn khi còn PENDING).</p>
+      <div class="img-wrapper">
+        <img src="dfd-level-2-leave.svg" alt="DFD Mức 2 Quản lý đơn từ">
+      </div>
+      <div class="actions">
+        <a class="btn" href="dfd-level-2-leave.svg" target="_blank">Mở SVG</a>
+        <a class="btn btn-primary" href="dfd-level-2-leave.png" download>Tải ảnh PNG (Độ nét cao)</a>
+      </div>
+    </div>
+
+    <!-- 6. DFD 2 Attendance -->
+    <div class="card" id="dfd2-attendance">
+      <div class="card-header">
+        <h2 class="card-title">6. DFD Mức 2 — Phân rã Tiến trình 4.0: Quản lý ca làm & Chấm công</h2>
+        <span class="badge">Mức 2 (Chi tiết)</span>
+      </div>
+      <p class="card-desc">Chi tiết hóa các tiến trình con 4.1 (Thiết lập ca & Phân lịch làm việc), 4.2 (Ghi nhận Check-in / Check-out) và 4.3 (Tổng hợp giờ công & Làm thêm OT).</p>
+      <div class="img-wrapper">
+        <img src="dfd-level-2-attendance.svg" alt="DFD Mức 2 Chấm công">
+      </div>
+      <div class="actions">
+        <a class="btn" href="dfd-level-2-attendance.svg" target="_blank">Mở SVG</a>
+        <a class="btn btn-primary" href="dfd-level-2-attendance.png" download>Tải ảnh PNG (Độ nét cao)</a>
+      </div>
+    </div>
+
+    <!-- 7. DFD 2 Payroll -->
+    <div class="card" id="dfd2-payroll">
+      <div class="card-header">
+        <h2 class="card-title">7. DFD Mức 2 — Phân rã Tiến trình 5.0: Quản lý tính lương & Chi trả</h2>
+        <span class="badge">Mức 2 (Chi tiết)</span>
+      </div>
+      <p class="card-desc">Chi tiết hóa các tiến trình con 5.1 (Khởi tạo kỳ lương & Thu thập dữ liệu), 5.2 (Tự động tính toán bảng lương chi tiết) và 5.3 (Khóa kỳ lương & Phát hành phiếu lương).</p>
+      <div class="img-wrapper">
+        <img src="dfd-level-2-payroll.svg" alt="DFD Mức 2 Tính lương">
+      </div>
+      <div class="actions">
+        <a class="btn" href="dfd-level-2-payroll.svg" target="_blank">Mở SVG</a>
+        <a class="btn btn-primary" href="dfd-level-2-payroll.png" download>Tải ảnh PNG (Độ nét cao)</a>
+      </div>
+    </div>
+
+    <footer>
+      <p>Dự án Hệ thống thông tin HRM Trung tâm Ngoại ngữ Bình An &bull; Cập nhật ngày 29/09/2026</p>
+    </footer>
+  </div>
+</body>
+</html>

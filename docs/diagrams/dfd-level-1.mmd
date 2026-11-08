@@ -1,0 +1,62 @@
+%% Diagram: DFD Mức 1 - Sơ đồ luồng dữ liệu mức đỉnh HRM Bình An
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#0e5b62', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#0b454b', 'lineColor': '#94a3b8', 'secondaryColor': '#d9f1e8', 'tertiaryColor': '#f4a261', 'background': '#ffffff', 'mainBkg': '#f8fafc', 'nodeBorder': '#cbd5e1', 'clusterBkg': '#f1f5f9', 'clusterBorder': '#e2e8f0', 'titleColor': '#18343b', 'edgeLabelBackground': '#ffffff', 'textColor': '#334155'}}}%%
+flowchart TB
+    admin["Admin"]
+    hr["HR Manager"]
+    employee["Nhân viên"]
+    leader["Trưởng nhóm"]
+
+    p1(("1.0 Quản trị hệ thống & Xác thực"))
+    p2(("2.0 Quản lý tổ chức & Nhân sự"))
+    p3(("3.0 Quản lý đơn từ & Nghỉ phép"))
+    p4(("4.0 Quản lý ca làm & Chấm công"))
+    p5(("5.0 Tính lương & Chi trả"))
+    p6(("6.0 Báo cáo & Thống kê"))
+
+    d1[("D1 Tài khoản & Phân quyền")]
+    d2[("D2 Cơ cấu & Hồ sơ nhân sự")]
+    d3[("D3 Đơn từ & Nghỉ phép")]
+    d4[("D4 Ca làm & Chấm công")]
+    d5[("D5 Lương & Quy chế")]
+
+    admin -->|"Phân quyền, Khóa tài khoản"| p1
+    p1 <-->|"Users, Roles, Audit"| d1
+    p1 -->|"Token JWT & Hồ sơ"| employee
+    p1 -->|"Nhật ký audit log"| admin
+
+    hr -->|"Phòng ban, Chức vụ, Nhân viên, Hợp đồng"| p2
+    employee -->|"SĐT, Email cá nhân"| p2
+    p2 <-->|"Employees, Departments, Positions, Contracts"| d2
+
+    employee -->|"Nộp đơn xin nghỉ, Hủy đơn"| p3
+    hr -->|"Duyệt / Từ chối đơn"| p3
+    p3 <-->|"Leave requests, Leave types"| d3
+    p3 -->|"Kết quả duyệt đơn"| employee
+
+    hr -->|"Xếp ca, Phân lịch làm việc"| p4
+    employee -->|"Ghi nhận Check-in/Check-out"| p4
+    leader -->|"Tra cứu công nhóm"| p4
+    p4 <-->|"Shifts, Schedules, Attendance"| d4
+    p4 -->|"Bảng công nhóm"| leader
+
+    hr -->|"Khởi tạo kỳ, Chạy tính lương, Khóa kỳ"| p5
+    p2 -->|"Thông tin hợp đồng & Lương cơ bản"| p5
+    p3 -->|"Ngày nghỉ phép hợp lệ"| p5
+    p4 -->|"Tổng ngày công & Giờ làm thêm"| p5
+    p5 <-->|"Payroll periods, Payrolls, Items"| d5
+    p5 -->|"Phiếu lương cá nhân (Payslip)"| employee
+    p5 -->|"Bảng lương tổng hợp"| hr
+
+    d2 -.->|"Dữ liệu nhân sự"| p6
+    d4 -.->|"Dữ liệu chấm công"| p6
+    d5 -.->|"Dữ liệu chi phí lương"| p6
+    p6 -->|"Báo cáo nhân sự, công, quỹ lương"| hr
+    p6 -->|"Báo cáo tổng hợp"| admin
+
+    classDef actorNode fill:#ffffff,stroke:#64748b,stroke-width:1.5px,color:#0f172a;
+    classDef processNode fill:#0e5b62,stroke:#0b454b,stroke-width:2px,color:#ffffff;
+    classDef storeNode fill:#e6f4ea,stroke:#137333,stroke-width:1.5px,color:#137333;
+
+    class admin,hr,employee,leader actorNode;
+    class p1,p2,p3,p4,p5,p6 processNode;
+    class d1,d2,d3,d4,d5 storeNode;

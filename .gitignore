@@ -14,3 +14,40 @@ uploads/
 .idea/
 .vscode/
 *.iml
+
+# OS and editor temporary files
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+*.bak
+*.orig
+
+# Python/report-generation cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Test and coverage output
+coverage/
+frontend/coverage/
+.nyc_output/
+*.lcov
+
+# Local tool/runtime files
+.local-backups/
+*.pid
+*.pid.lock
+*.seed
+*.tmp
+docker-compose.override.yml
+
+# Frontend tool caches
+frontend/.vite/
+frontend/.cache/
+
+# Báo cáo nhóm (.docx) giữ trên máy, không đưa lên repo công khai
+2. ĐỒ ÁN/
+docs/bao-cao-tuan-3-hrm-binh-an.docx

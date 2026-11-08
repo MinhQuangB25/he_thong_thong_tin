@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 
-public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, Long> {
+public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, Long>, org.springframework.data.jpa.repository.JpaSpecificationExecutor<LeaveRequest> {
     Page<LeaveRequest> findByEmployeeId(Long employeeId, Pageable pageable);
 
     @Query("""
@@ -21,4 +21,3 @@ public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, Long
                               @Param("fromDate") LocalDate fromDate,
                               @Param("toDate") LocalDate toDate);
 }
-

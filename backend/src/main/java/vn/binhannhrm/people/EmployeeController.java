@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,9 +33,16 @@ public class EmployeeController {
     public PageResponse<EmployeeDtos.EmployeeResponse> list(
             @AuthenticationPrincipal AppUserPrincipal principal,
             @RequestParam(defaultValue = "") String search,
+            @RequestParam(required = false) vn.binhannhrm.domain.EmployeeStatus status,
+            @RequestParam(required = false) String department,
+            @RequestParam(required = false) String position,
             Pageable pageable
     ) {
-        return PageResponse.from(service.list(search, pageable, teamAccess.scope(principal, null)));
+        pageable = vn.binhannhrm.common.PageableValidation.validate(pageable, java.util.Map.of(
+                "id", "id", "fullName", "fullName", "employeeCode", "employeeCode",
+                "status", "status", "joinDate", "joinDate", "departmentName", "department.name",
+                "positionTitle", "position.title"));
+        return PageResponse.from(service.list(search, status, department, position, pageable, teamAccess.scope(principal, null)));
     }
 
     @GetMapping("/{id}")
@@ -56,6 +64,12 @@ public class EmployeeController {
     @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
     public EmployeeDtos.EmployeeResponse create(@Valid @RequestBody EmployeeDtos.CreateEmployeeRequest request) {
         return service.create(request);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR_MANAGER')")
+    public EmployeeDtos.EmployeeResponse update(@PathVariable Long id, @Valid @RequestBody EmployeeDtos.UpdateEmployeeRequest request) {
+        return service.update(id, request);
     }
 
     @PatchMapping("/me")

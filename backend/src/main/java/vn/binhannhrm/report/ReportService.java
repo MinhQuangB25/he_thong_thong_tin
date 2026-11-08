@@ -40,7 +40,8 @@ public class ReportService {
     public ReportDtos.EmployeeReport employeeReport(Integer month, Integer year) {
         YearMonth selected = selectedMonth(month, year);
         LocalDate asOf = selected.atEndOfMonth();
-        List<Employee> allEmployees = employees.findAll();
+        List<Employee> allEmployees = employees.findAll().stream()
+                .filter(employee -> !employee.getJoinDate().isAfter(asOf)).toList();
         List<LeaveRequest> approvedLeaves = leaveRequests.findAll().stream()
                 .filter(request -> request.getStatus() == LeaveStatus.APPROVED)
                 .filter(request -> !request.getFromDate().isAfter(asOf) && !request.getToDate().isBefore(asOf))
@@ -111,7 +112,7 @@ public class ReportService {
         if (terminatedAtEndOfMonth) {
             return EmployeeStatus.TERMINATED.name();
         }
-        if (approvedLeaveAtEndOfMonth || employee.getStatus() == EmployeeStatus.ON_LEAVE) {
+        if (approvedLeaveAtEndOfMonth) {
             return EmployeeStatus.ON_LEAVE.name();
         }
         return EmployeeStatus.ACTIVE.name();

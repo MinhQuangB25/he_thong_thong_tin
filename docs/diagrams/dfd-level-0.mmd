@@ -1,25 +1,27 @@
-%% Diagram: DFD mức đỉnh - Luồng dữ liệu HRM
+%% Diagram: DFD Mức 0 - Sơ đồ ngữ cảnh HRM Bình An
 %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#0e5b62', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#0b454b', 'lineColor': '#94a3b8', 'secondaryColor': '#d9f1e8', 'tertiaryColor': '#f4a261', 'background': '#ffffff', 'mainBkg': '#f8fafc', 'nodeBorder': '#cbd5e1', 'clusterBkg': '#f1f5f9', 'clusterBorder': '#e2e8f0', 'titleColor': '#18343b', 'edgeLabelBackground': '#ffffff', 'textColor': '#334155'}}}%%
 flowchart LR
-    admin[Admin] --> p1((1.0 Quản lý truy cập))
-    hr[HR] --> p2((2.0 Quản lý nhân sự))
-    employee[Nhân viên] --> p3((3.0 Xử lý đơn nghỉ))
-    leader[Trưởng nhóm] --> p4((4.0 Chấm công))
-    hr --> p5((5.0 Tính lương và báo cáo))
-    p1 <--> d1[(D1 Users / Roles)]
-    p2 <--> d2[(D2 Employees / Contracts)]
-    p3 <--> d3[(D3 Leave Requests)]
-    p4 <--> d4[(D4 Schedules / Attendance)]
-    p5 <--> d5[(D5 Payroll / Settings)]
-    p1 -->|Quyền truy cập| p2
-    p2 -->|Hồ sơ nhân sự| p3
-    p4 -->|Ngày công| p5
-    p3 -->|Ngày nghỉ hợp lệ| p5
-    p5 -->|Bảng lương / thống kê| hr
-    p5 -->|Payslip cá nhân| employee
-    classDef actorNode fill:#fff,stroke:#cbd5e1,color:#334155
-    classDef processNode fill:#0e5b62,stroke:#0b454b,color:#fff
-    classDef storeNode fill:#d9f1e8,stroke:#79b8a7,color:#18343b
-    class admin,hr,employee,leader actorNode
-    class p1,p2,p3,p4,p5 processNode
-    class d1,d2,d3,d4,d5 storeNode
+    admin["Quản trị viên (Admin)"]
+    hr["Quản lý nhân sự (HR Manager)"]
+    leader["Trưởng nhóm (Team Leader)"]
+    employee["Nhân viên (Employee)"]
+
+    hrm(("0.0<br/>HỆ THỐNG QUẢN LÝ<br/>NHÂN SỰ HRM BÌNH AN"))
+
+    admin -->|"Phân quyền, Trạng thái tài khoản"| hrm
+    hrm -->|"Danh sách người dùng, Nhật ký audit"| admin
+
+    hr -->|"Hồ sơ nhân sự, Hợp đồng, Duyệt đơn, Tính lương"| hrm
+    hrm -->|"Danh sách đơn chờ duyệt, Bảng lương, Báo cáo"| hr
+
+    leader -->|"Yêu cầu xem lịch & công nhóm"| hrm
+    hrm -->|"Lịch làm việc, Bảng công nhóm phụ trách"| leader
+
+    employee -->|"Đăng nhập, Đơn nghỉ phép, SĐT/Email cá nhân"| hrm
+    hrm -->|"Lịch cá nhân, Dữ liệu chấm công, Phiếu lương"| employee
+
+    classDef actorNode fill:#ffffff,stroke:#64748b,stroke-width:2px,color:#0f172a;
+    classDef systemNode fill:#0e5b62,stroke:#0b454b,stroke-width:3px,color:#ffffff;
+
+    class admin,hr,leader,employee actorNode;
+    class hrm systemNode;

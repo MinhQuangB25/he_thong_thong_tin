@@ -1,6 +1,7 @@
--- File mô tả bản backup demo của HRM Trung tâm Ngoại ngữ Bình An.
--- Tạo backup đầy đủ bằng:
--- docker compose exec db mysqldump -u root -p binhan_hrm > database/backup-YYYYMMDD.sql
--- Phục hồi bằng:
--- Get-Content database/backup-YYYYMMDD.sql | docker compose exec -T db mysql -u root -p binhan_hrm
--- Dữ liệu khởi tạo có thể phục hồi lại từ schema.sql và seed.sql.
+-- Đây là ghi chú backup demo, không phải snapshot của CSDL đang dùng.
+-- Quy trình đầy đủ: docs/backup-restore.md.
+-- Dùng mysqldump --result-file bên trong container rồi docker cp nguyên byte.
+-- Phục hồi thử trên MySQL tạm độc lập, không ghi đè CSDL chính.
+-- Bản backup thực tế lưu tại .local-backups/ (gitignored, không đưa GitHub).
+-- Đã nghiệm thu 14/10/2026: docs/testing/backup-restore-2026-10-14.md.
+-- schema.sql/seed.sql dành cho khởi tạo mới, không thay thế backup giao dịch.

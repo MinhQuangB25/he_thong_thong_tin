@@ -1,0 +1,40 @@
+%% Diagram: DFD Mức 2 - Tiến trình 3.0 Quản lý đơn từ & Nghỉ phép
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#0e5b62', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#0b454b', 'lineColor': '#94a3b8', 'secondaryColor': '#d9f1e8', 'tertiaryColor': '#f4a261', 'background': '#ffffff', 'mainBkg': '#f8fafc', 'nodeBorder': '#cbd5e1', 'clusterBkg': '#f1f5f9', 'clusterBorder': '#e2e8f0', 'titleColor': '#18343b', 'edgeLabelBackground': '#ffffff', 'textColor': '#334155'}}}%%
+flowchart TD
+    emp["Nhân viên"]
+    hr["HR Manager"]
+
+    subgraph p3_box["3.0 QUẢN LÝ ĐƠN TỪ & NGHỈ PHÉP"]
+        p31(("3.1 Tiếp nhận & Kiểm tra đơn nghỉ phép"))
+        p32(("3.2 Thẩm định & Phê duyệt / Từ chối"))
+        p33(("3.3 Hủy đơn nghỉ phép chờ duyệt"))
+    end
+
+    d31[("leave_types")]
+    d32[("leave_requests")]
+    d22[("employees")]
+
+    emp -->|"Loại nghỉ, Từ ngày, Đến ngày, Lý do"| p31
+    p31 <-->|"Kiểm tra danh mục & định mức loại nghỉ"| d31
+    p31 <-->|"Kiểm tra không trùng lặp khoảng thời gian"| d32
+    p31 -->|"Ghi nhận đơn mới (Trạng thái PENDING)"| d32
+    p31 -->|"Xác nhận đã gửi đơn"| emp
+
+    d32 -->|"Danh sách đơn PENDING"| p32
+    hr -->|"Quyết định: APPROVED / REJECTED + Lý do"| p32
+    p32 <-->|"Xác thực quyền phê duyệt"| d22
+    p32 -->|"Cập nhật trạng thái đơn & ngày duyệt"| d32
+    p32 -->|"Thông báo kết quả duyệt đơn"| emp
+
+    emp -->|"Yêu cầu hủy đơn khi còn PENDING"| p33
+    p33 <-->|"Kiểm tra đơn của chính mình & trạng thái PENDING"| d32
+    p33 -->|"Cập nhật trạng thái CANCELLED"| d32
+    p33 -->|"Xác nhận đã hủy đơn"| emp
+
+    classDef actorNode fill:#ffffff,stroke:#64748b,stroke-width:1.5px,color:#0f172a;
+    classDef processNode fill:#0e5b62,stroke:#0b454b,color:#ffffff;
+    classDef storeNode fill:#e6f4ea,stroke:#137333,color:#137333;
+
+    class hr,emp actorNode;
+    class p31,p32,p33 processNode;
+    class d31,d32,d22 storeNode;
